@@ -35,12 +35,23 @@ public class MyHashTableTest extends TestCase {
         assertTrue(table.getUsedSpaceCount() == 0);
     }
 
+
     /** Checking if initial size can be built - is not power of two */
 
-// @Test(expected = IllegalArgumentException.class)
-// public void testWrongSize() {
-// new MyHashTable(5);
-// }
+    @Test
+    public void testWrongSize() {
+        try {
+            new MyHashTable(5);
+            fail("Expected an IllegalArgumentException to be thrown");
+        }
+        catch (IllegalArgumentException e) {
+            // Test passes if this block is reached
+        }
+        catch (Exception e) {
+            fail(
+                "Expected an IllegalArgumentException, but another exception was thrown");
+        }
+    }
 
 
     /** Checking if initial size is power of two */

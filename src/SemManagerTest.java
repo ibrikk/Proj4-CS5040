@@ -43,12 +43,10 @@ public class SemManagerTest extends TestCase {
         args[1] = "4";
 
         args[2] = "P1Hash_input.txt";
-        
+
         systemOut().clearHistory();
 
         manager.main(args);
-
-       
 
         String output = systemOut().getHistory();
 
