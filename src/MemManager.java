@@ -35,39 +35,26 @@ public class MemManager {
      *            - the size of the initialized array
      *            class definition for the Memory Manager
      */
-    public MemManager(int initialSize) {
-        this.memoryPool = new byte[initialSize];
-        this.maxPower = (int)(Math.log(initialSize) / Math.log(2));
+    public MemManager(int poolSize) {
+        this.memoryPool = new byte[poolSize];
+        this.maxPower = (int)(Math.log(poolSize) / Math.log(2));
         this.freeLists = new LinkedList[maxPower + 1];
-
         for (int i = 0; i <= maxPower; i++) {
             freeLists[i] = new LinkedList();
         }
-
-        // Initially, the whole memory is a free block
-        freeLists[maxPower].add(0, initialSize);
+        freeLists[maxPower].add(0, poolSize);
     }
 
 
-    public Handle insert(int size) {
+    public Handle insert(byte[] space, int size) {
         int requiredPower = 0;
-        while ((1 << requiredPower) < size) {
+        while ((1 << requiredPower) < size)
             requiredPower++;
-        }
         int blockSize = 1 << requiredPower;
 
         for (int i = requiredPower; i <= maxPower; i++) {
             if (!freeLists[i].isEmpty()) {
-                // Find and remove the first block of this size
-// ListNode block = freeLists[i].findAndRemove(1 << i);
-// int currentSize = 1 << i;
-// while (currentSize > blockSize) {
-// currentSize >>= 1;
-// freeLists[requiredPower].add(block.start + currentSize,
-// currentSize);
-// }
-// return new Handle(block.start, blockSize);
-
+                // Split blocks until the correct size is achieved
                 while (i > requiredPower) {
                     ListNode block = freeLists[i].findAndRemove(1 << i);
                     int currentSize = 1 << i;
@@ -79,45 +66,22 @@ public class MemManager {
                 }
                 ListNode block = freeLists[requiredPower].findAndRemove(
                     1 << requiredPower);
-                return new Handle(block.start, blockSize);
+                System.arraycopy(space, 0, memoryPool, block.start, size);
+                return new Handle(block.start, size);
             }
         }
-
         return null; // Not enough memory
     }
 
-// public void free(Handle handle) {
-// int blockPower = 0;
-// while ((1 << blockPower) != handle.getLength())
-// blockPower++;
-// int buddyStart = handle.getStartingPos() ^ (1 << blockPower);
-//
-// // Try to find and merge with buddy
-// ListNode buddy = null;
-// for (ListNode node = freeLists[blockPower].head; node != null; node =
-// node.next) {
-// if (node.start == buddyStart) {
-// buddy = node;
-// break;
-// }
-// }
-//
-// if (buddy != null) {
-// freeLists[blockPower].remove(buddy.start, buddy.size);
-// // Merge and free at a higher level
-// free(new Handle(Math.min(handle.getStartingPos(), buddy.start),
-// handle.getLength() * 2));
-// }
-// else {
-// freeLists[blockPower].add(handle.getStartingPos(), handle
-// .getLength());
-// }
-// }
+
+    public int length(Handle theHandle) {
+        return theHandle.getLength();
+    }
 
 
-    public void free(Handle handle) {
-        int blockPower = (int)(Math.log(handle.getLength()) / Math.log(2));
-        int buddyStart = handle.getStartingPos() ^ (1 << blockPower);
+    public void remove(Handle theHandle) {
+        int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
+        int buddyStart = theHandle.getStartingPos() ^ (1 << blockPower);
 
         ListNode buddy = null;
         for (ListNode node = freeLists[blockPower].head; node != null; node =
@@ -131,31 +95,53 @@ public class MemManager {
         if (buddy != null) {
             freeLists[blockPower].remove(buddy.start, buddy.size);
             // Merge and free at a higher level
-            free(new Handle(Math.min(handle.getStartingPos(), buddy.start),
-                handle.getLength() * 2));
+            remove(new Handle(Math.min(theHandle.getStartingPos(), buddy.start),
+                theHandle.getLength() * 2));
         }
         else {
-            freeLists[blockPower].add(handle.getStartingPos(), handle
+            freeLists[blockPower].add(theHandle.getStartingPos(), theHandle
                 .getLength());
         }
     }
 
 
-    // Writes data to the allocated block
-    public void writeData(Handle handle, byte[] data) {
-        if (data.length > handle.getLength()) {
-            throw new IllegalArgumentException("Data exceeds block size.");
+    public int get(byte[] space, Handle theHandle, int size) {
+        int bytesToCopy = Math.min(size, theHandle.getLength());
+        System.arraycopy(memoryPool, theHandle.getStartingPos(), space, 0,
+            bytesToCopy);
+        return bytesToCopy;
+    }
+
+
+    public void dump() {
+        for (int i = 0; i <= maxPower; i++) {
+            System.out.print("Size " + (1 << i) + ": ");
+            ListNode current = freeLists[i].head;
+            while (current != null) {
+                System.out.print("(" + current.start + ", " + current.size
+                    + ") ");
+                current = current.next;
+            }
+            System.out.println();
         }
-        System.arraycopy(data, 0, memoryPool, handle.getStartingPos(),
-            data.length);
     }
 
 
-    // Reads data from the block
-    public byte[] readData(Handle handle) {
-        byte[] data = new byte[handle.getLength()];
-        System.arraycopy(memoryPool, handle.getStartingPos(), data, 0, handle
-            .getLength());
-        return data;
-    }
+// // Writes data to the allocated block
+// public void writeData(Handle handle, byte[] data) {
+// if (data.length > handle.getLength()) {
+// throw new IllegalArgumentException("Data exceeds block size.");
+// }
+// System.arraycopy(data, 0, memoryPool, handle.getStartingPos(),
+// data.length);
+// }
+//
+//
+// // Reads data from the block
+// public byte[] readData(Handle handle) {
+// byte[] data = new byte[handle.getLength()];
+// System.arraycopy(memoryPool, handle.getStartingPos(), data, 0, handle
+// .getLength());
+// return data;
+// }
 }
