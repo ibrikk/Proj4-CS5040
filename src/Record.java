@@ -20,12 +20,27 @@
  */
 
 /**
+ * This is the Record class the hash table returns
+ * 
+ * @author {Ibrahim Khalilov ibrahimk}
+ * @version 2023-09-04
+ */
+public class Record {
+    Handle handle;
+    int seminarId;
+
+}
+
+
+
+
+/**
  * This is the Handle class the MemoryManager returns
  * 
  * @author {Ibrahim Khalilov ibrahimk}
  * @version 2023-09-04
  */
-public class Handle {
+class Handle {
     /**
      * Position that has the start of the memory block.
      */
