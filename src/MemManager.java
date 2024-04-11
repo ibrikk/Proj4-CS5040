@@ -49,7 +49,7 @@ public class MemManager {
     }
 
 
-    public Handle allocate(int size) {
+    public Handle insert(int size) {
         int requiredPower = 0;
         while ((1 << requiredPower) < size) {
             requiredPower++;
