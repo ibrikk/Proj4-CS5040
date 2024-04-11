@@ -51,34 +51,74 @@ public class MemManager {
 
     public Handle allocate(int size) {
         int requiredPower = 0;
-        while ((1 << requiredPower) < size)
+        while ((1 << requiredPower) < size) {
             requiredPower++;
+        }
         int blockSize = 1 << requiredPower;
 
         for (int i = requiredPower; i <= maxPower; i++) {
             if (!freeLists[i].isEmpty()) {
                 // Find and remove the first block of this size
-                ListNode block = freeLists[i].findAndRemove(1 << i);
-                int currentSize = 1 << i;
-                while (currentSize > blockSize) {
+// ListNode block = freeLists[i].findAndRemove(1 << i);
+// int currentSize = 1 << i;
+// while (currentSize > blockSize) {
+// currentSize >>= 1;
+// freeLists[requiredPower].add(block.start + currentSize,
+// currentSize);
+// }
+// return new Handle(block.start, blockSize);
+
+                while (i > requiredPower) {
+                    ListNode block = freeLists[i].findAndRemove(1 << i);
+                    int currentSize = 1 << i;
                     currentSize >>= 1;
-                    freeLists[requiredPower].add(block.start + currentSize,
+                    freeLists[i - 1].add(block.start, currentSize);
+                    freeLists[i - 1].add(block.start + currentSize,
                         currentSize);
+                    i--;
                 }
+                ListNode block = freeLists[requiredPower].findAndRemove(
+                    1 << requiredPower);
                 return new Handle(block.start, blockSize);
             }
         }
+
         return null; // Not enough memory
     }
 
+// public void free(Handle handle) {
+// int blockPower = 0;
+// while ((1 << blockPower) != handle.getLength())
+// blockPower++;
+// int buddyStart = handle.getStartingPos() ^ (1 << blockPower);
+//
+// // Try to find and merge with buddy
+// ListNode buddy = null;
+// for (ListNode node = freeLists[blockPower].head; node != null; node =
+// node.next) {
+// if (node.start == buddyStart) {
+// buddy = node;
+// break;
+// }
+// }
+//
+// if (buddy != null) {
+// freeLists[blockPower].remove(buddy.start, buddy.size);
+// // Merge and free at a higher level
+// free(new Handle(Math.min(handle.getStartingPos(), buddy.start),
+// handle.getLength() * 2));
+// }
+// else {
+// freeLists[blockPower].add(handle.getStartingPos(), handle
+// .getLength());
+// }
+// }
+
 
     public void free(Handle handle) {
-        int blockPower = 0;
-        while ((1 << blockPower) != handle.getLength())
-            blockPower++;
+        int blockPower = (int)(Math.log(handle.getLength()) / Math.log(2));
         int buddyStart = handle.getStartingPos() ^ (1 << blockPower);
 
-        // Try to find and merge with buddy
         ListNode buddy = null;
         for (ListNode node = freeLists[blockPower].head; node != null; node =
             node.next) {
@@ -98,5 +138,24 @@ public class MemManager {
             freeLists[blockPower].add(handle.getStartingPos(), handle
                 .getLength());
         }
+    }
+
+
+    // Writes data to the allocated block
+    public void writeData(Handle handle, byte[] data) {
+        if (data.length > handle.getLength()) {
+            throw new IllegalArgumentException("Data exceeds block size.");
+        }
+        System.arraycopy(data, 0, memoryPool, handle.getStartingPos(),
+            data.length);
+    }
+
+
+    // Reads data from the block
+    public byte[] readData(Handle handle) {
+        byte[] data = new byte[handle.getLength()];
+        System.arraycopy(memoryPool, handle.getStartingPos(), data, 0, handle
+            .getLength());
+        return data;
     }
 }
