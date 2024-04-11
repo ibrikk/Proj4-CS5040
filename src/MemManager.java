@@ -59,15 +59,15 @@ public class MemManager {
                     ListNode block = freeLists[i].findAndRemove(1 << i);
                     int currentSize = 1 << i;
                     currentSize >>= 1;
-                    freeLists[i - 1].add(block.start, currentSize);
-                    freeLists[i - 1].add(block.start + currentSize,
+                    freeLists[i - 1].add(block.getStart(), currentSize);
+                    freeLists[i - 1].add(block.getStart() + currentSize,
                         currentSize);
                     i--;
                 }
                 ListNode block = freeLists[requiredPower].findAndRemove(
                     1 << requiredPower);
-                System.arraycopy(space, 0, memoryPool, block.start, size);
-                return new Handle(block.start, size);
+                System.arraycopy(space, 0, memoryPool, block.getStart(), size);
+                return new Handle(block.getStart(), size);
             }
         }
         return null; // Not enough memory
@@ -85,18 +85,18 @@ public class MemManager {
 
         ListNode buddy = null;
         for (ListNode node = freeLists[blockPower].head; node != null; node =
-            node.next) {
-            if (node.start == buddyStart) {
+            node.getNext()) {
+            if (node.getStart() == buddyStart) {
                 buddy = node;
                 break;
             }
         }
 
         if (buddy != null) {
-            freeLists[blockPower].remove(buddy.start, buddy.size);
+            freeLists[blockPower].remove(buddy.getStart(), buddy.getSize());
             // Merge and free at a higher level
-            remove(new Handle(Math.min(theHandle.getStartingPos(), buddy.start),
-                theHandle.getLength() * 2));
+            remove(new Handle(Math.min(theHandle.getStartingPos(), buddy
+                .getStart()), theHandle.getLength() * 2));
         }
         else {
             freeLists[blockPower].add(theHandle.getStartingPos(), theHandle
@@ -118,14 +118,13 @@ public class MemManager {
             System.out.print("Size " + (1 << i) + ": ");
             ListNode current = freeLists[i].head;
             while (current != null) {
-                System.out.print("(" + current.start + ", " + current.size
-                    + ") ");
-                current = current.next;
+                System.out.print("(" + current.getStart() + ", " + current
+                    .getSize() + ") ");
+                current = current.getNext();
             }
             System.out.println();
         }
     }
-
 
 // // Writes data to the allocated block
 // public void writeData(Handle handle, byte[] data) {

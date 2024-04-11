@@ -1,4 +1,3 @@
-
 public class LinkedList {
     ListNode head;
 
@@ -8,7 +7,7 @@ public class LinkedList {
             head = newNode;
         }
         else {
-            newNode.next = head;
+            newNode.setNext(head);
             head = newNode;
         }
     }
@@ -16,19 +15,19 @@ public class LinkedList {
 
     public void remove(int start, int size) {
         ListNode current = head, prev = null;
-        while (current != null && !(current.start == start
-            && current.size == size)) {
+        while (current != null && !(current.getStart() == start && current
+            .getSize() == size)) {
             prev = current;
-            current = current.next;
+            current = current.getNext();
         }
         if (current == null)
             return; // Node not found
 
         if (prev == null) {
-            head = head.next;
+            head = head.getNext();
         }
         else {
-            prev.next = current.next;
+            prev.setNext(current.getNext());
         }
     }
 
@@ -40,18 +39,18 @@ public class LinkedList {
 
     ListNode findAndRemove(int size) {
         ListNode current = head, prev = null;
-        while (current != null && current.size != size) {
+        while (current != null && current.getSize() != size) {
             prev = current;
-            current = current.next;
+            current = current.getNext();
         }
         if (current == null)
             return null; // No suitable block found
 
         if (prev == null) {
-            head = head.next;
+            head = head.getNext();
         }
         else {
-            prev.next = current.next;
+            prev.setNext(current.getNext());
         }
         return current;
     }
@@ -61,13 +60,43 @@ public class LinkedList {
 
 
 class ListNode {
-    int start;
-    int size;
-    ListNode next;
+    private int start;
+    private int size;
+    private ListNode next;
 
     ListNode(int start, int size) {
         this.start = start;
         this.size = size;
         this.next = null;
+    }
+
+
+    public ListNode getNext() {
+        return next;
+    }
+
+
+    public void setNext(ListNode next) {
+        this.next = next;
+    }
+
+
+    public int getStart() {
+        return start;
+    }
+
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+
+    public int getSize() {
+        return size;
+    }
+
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
