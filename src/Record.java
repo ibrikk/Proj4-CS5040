@@ -25,9 +25,24 @@
  * @author {Ibrahim Khalilov ibrahimk}
  * @version 2023-09-04
  */
-public class Record {
+public class Record implements HashableEntry {
     Handle handle;
     int seminarId;
+
+    public int getSeminarId() {
+        return seminarId;
+    }
+
+
+    public Handle getHandle() {
+        return handle;
+    }
+
+
+    @Override
+    public boolean isTombstone() {
+        return false;
+    }
 
 }
 
