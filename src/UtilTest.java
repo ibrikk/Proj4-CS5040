@@ -38,4 +38,23 @@ public class UtilTest extends TestCase {
         assertEquals(systemOut().getHistory(), expected);
 
     }
+
+
+    /** Checking if initial size is power of two */
+
+    @Test
+    public void testPowerOfTwo() {
+        int powerOfTwoSixteen = 16;
+        int powerOfTwoTwo = 2;
+        int powerOfTwoFive = 5;
+        int powerOfTwoSix = 6;
+        int powerOfTwoNegativeSix = -6;
+        int powerOfTwoZero = 0;
+        assertTrue(Util.isPowerOfTwo(powerOfTwoSixteen));
+        assertTrue(Util.isPowerOfTwo(powerOfTwoTwo));
+        assertFalse(Util.isPowerOfTwo(powerOfTwoFive));
+        assertFalse(Util.isPowerOfTwo(powerOfTwoSix));
+        assertFalse(Util.isPowerOfTwo(powerOfTwoNegativeSix));
+        assertFalse(Util.isPowerOfTwo(powerOfTwoZero));
+    }
 }

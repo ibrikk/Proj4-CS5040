@@ -54,25 +54,6 @@ public class MyHashTableTest extends TestCase {
     }
 
 
-    /** Checking if initial size is power of two */
-
-    @Test
-    public void testPowerOfTwo() {
-        int powerOfTwoSixteen = 16;
-        int powerOfTwoTwo = 2;
-        int powerOfTwoFive = 5;
-        int powerOfTwoSix = 6;
-        int powerOfTwoNegativeSix = -6;
-        int powerOfTwoZero = 0;
-        assertTrue(table.isPowerOfTwo(powerOfTwoSixteen));
-        assertTrue(table.isPowerOfTwo(powerOfTwoTwo));
-        assertFalse(table.isPowerOfTwo(powerOfTwoFive));
-        assertFalse(table.isPowerOfTwo(powerOfTwoSix));
-        assertFalse(table.isPowerOfTwo(powerOfTwoNegativeSix));
-        assertFalse(table.isPowerOfTwo(powerOfTwoZero));
-    }
-
-
     /** Testing hash1 method */
     @Test
     public void testHash1() {
