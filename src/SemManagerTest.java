@@ -12,7 +12,6 @@ import student.TestCase;
  */
 
 public class SemManagerTest extends TestCase {
-    private SemManager manager;
 
     /**
      * Before annotation runs before each test
@@ -22,7 +21,6 @@ public class SemManagerTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        manager = new SemManager();
     }
 
 
@@ -38,15 +36,15 @@ public class SemManagerTest extends TestCase {
 
         String[] args = new String[3];
 
-        args[0] = "16";
+        args[0] = "512";
 
-        args[1] = "4";
+        args[1] = "16";
 
         args[2] = "P1Hash_input.txt";
 
         systemOut().clearHistory();
 
-        manager.main(args);
+        SemManager.main(args);
 
         String output = systemOut().getHistory();
 

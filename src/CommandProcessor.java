@@ -60,9 +60,11 @@ public class CommandProcessor {
             case "insert":
 // Pretend getting Handle from mm
                 Seminar sem = createSeminar(lines);
+                int mockId = 0;
                 Handle mockFromMM = new Handle(7, 2345);
+                Record mockFromMMRec = new Record(mockId, mockFromMM);
                 int insertKey = Integer.parseInt(lines[0][1]);
-                boolean didInsert = hash.insert(insertKey, mockFromMM);
+                boolean didInsert = hash.insert(insertKey, mockFromMMRec);
                 if (didInsert) {
                     Util.print(sem.toString());
                     try {

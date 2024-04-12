@@ -30,7 +30,7 @@ public class MyHashTable {
 /// Using Integer type because it supports null
     private Integer[] keyTable;
 
-    private Handle[] values;
+    private Record[] values;
 
     private int size;
 
@@ -49,7 +49,7 @@ public class MyHashTable {
      * 
      * @return array of Handles
      */
-    public Handle[] getValues() {
+    public Record[] getValues() {
         return values;
     }
 
@@ -86,7 +86,7 @@ public class MyHashTable {
             throw new IllegalArgumentException("Size must be a power of 2");
         }
         keyTable = new Integer[initialSize];
-        values = new Handle[initialSize];
+        values = new Record[initialSize];
         size = initialSize;
         usedSpaceCount = 0;
     }
@@ -123,7 +123,7 @@ public class MyHashTable {
      *            startPos of the byte and length
      * @return true if was able to insert.
      */
-    public boolean insert(int key, Handle value) {
+    public boolean insert(int key, Record value) {
 
         // Check for inserting a negative key
         if (key < 0) {

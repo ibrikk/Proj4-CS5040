@@ -80,8 +80,10 @@ public class SemManager {
         if (parser == null) {
             return;
         }
-        int initialMemorySize = 10;
+        // DEFAULT VALUES
+        int initialMemorySize = 16;
         int initialHashSize = 16;
+
         try {
             initialMemorySize = Integer.parseInt(args[0]);
             initialHashSize = Integer.parseInt(args[1]);

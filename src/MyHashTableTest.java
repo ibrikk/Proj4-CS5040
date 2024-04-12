@@ -80,12 +80,13 @@ public class MyHashTableTest extends TestCase {
     @Test
     public void testInsert() {
         Handle value = new Handle(0, 3);
-        table.insert(66, value);
-        table.insert(2, value);
-        table.insert(3, value);
-        table.insert(-1, value);
-        table.insert(146, value);
-        table.insert(158, value);
+        Record val = new Record(0, value);
+        table.insert(66, val);
+        table.insert(2, val);
+        table.insert(3, val);
+        table.insert(-1, val);
+        table.insert(146, val);
+        table.insert(158, val);
         assertTrue(table.getKeyTable()[2].equals(66));
         assertTrue(table.getKeyTable()[3].equals(2));
         assertTrue(table.getKeyTable()[4].equals(3));
@@ -97,9 +98,10 @@ public class MyHashTableTest extends TestCase {
     @Test
     public void testInsertDuplicate() {
         Handle value = new Handle(0, 3);
-        table.insert(6, value);
+        Record val = new Record(0, value);
+        table.insert(6, val);
         systemOut().clearHistory();
-        table.insert(6, value);
+        table.insert(6, val);
         assertEquals(systemOut().getHistory(),
             "Insert FAILED - There is already a record with ID 6\n");
     }
@@ -111,7 +113,7 @@ public class MyHashTableTest extends TestCase {
     public void testInsertManyKeys() {
         table = new MyHashTable(16);
         for (int i = 0; i < 100; i++) {
-            table.insert(i, new Handle(i, i + 8));
+            table.insert(i, new Record(i, new Handle(i, i + 8)));
         }
         assertEquals(100, table.getUsedSpaceCount());
         for (int i = 0; i < 100; i++) {
@@ -125,13 +127,13 @@ public class MyHashTableTest extends TestCase {
     @Test
     public void testDeleteKey() {
         table = new MyHashTable(16);
-        table.insert(66, new Handle(1, 4));
-        table.insert(2, new Handle(1, 4));
-        table.insert(3, new Handle(1, 4));
+        table.insert(66, new Record(0, new Handle(1, 4)));
+        table.insert(2, new Record(0, new Handle(1, 4)));
+        table.insert(3, new Record(0, new Handle(1, 4)));
         assertTrue(table.delete(3));
         assertFalse(table.delete(70));
         assertEquals(-1, table.search(1));
-        table.insert(1, new Handle(1, 4));
+        table.insert(1, new Record(0, new Handle(1, 4)));
 
         assertFalse(table.delete(-1));
         assertEquals(1, table.search(1));
@@ -155,7 +157,7 @@ public class MyHashTableTest extends TestCase {
     public void testResize() {
 
         for (int i = 0; i <= 9; i++) {
-            table.insert(i, new Handle(i, 3));
+            table.insert(i, new Record(0, new Handle(i, 3)));
         }
 
         assertEquals(32, table.getSize());
@@ -172,12 +174,12 @@ public class MyHashTableTest extends TestCase {
     public void testSearch() {
         table = new MyHashTable(16);
 
-        table.insert(1, new Handle(1, 4));
-        table.insert(2, new Handle(12, 3));
+        table.insert(1, new Record(0, new Handle(1, 4)));
+        table.insert(2, new Record(0, new Handle(12, 3)));
         table.delete(1);
         assertEquals(-1, table.search(1));
         assertEquals(2, table.search(2));
-        table.insert(66, new Handle(1, 4));
+        table.insert(66, new Record(0, new Handle(1, 4)));
         assertEquals(11, table.search(66));
     }
 
@@ -188,7 +190,7 @@ public class MyHashTableTest extends TestCase {
     public void testPrintHashTable() {
         table = new MyHashTable(16);
 
-        table.insert(1, new Handle(1, 4));
+        table.insert(1, new Record(0, new Handle(1, 4)));
         systemOut().clearHistory();
         table.printHashTable();
         assertEquals(systemOut().getHistory(), "1: 1\ntotal records: 1\n");

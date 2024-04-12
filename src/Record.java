@@ -29,6 +29,12 @@ public class Record implements HashableEntry {
     Handle handle;
     int seminarId;
 
+    public Record(int seminarId, Handle handle) {
+        this.seminarId = seminarId;
+        this.handle = handle;
+    }
+
+
     public int getSeminarId() {
         return seminarId;
     }
