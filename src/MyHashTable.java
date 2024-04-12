@@ -82,25 +82,13 @@ public class MyHashTable {
 
     public MyHashTable(int initialSize) {
 
-        if (!isPowerOfTwo(initialSize)) {
+        if (!Util.isPowerOfTwo(initialSize)) {
             throw new IllegalArgumentException("Size must be a power of 2");
         }
         keyTable = new Integer[initialSize];
         values = new Handle[initialSize];
         size = initialSize;
         usedSpaceCount = 0;
-    }
-
-
-    /**
-     * @param x
-     *            - checking if x is power of 2
-     * 
-     * @return - true or false if the value inputted is powerOfTwo
-     */
-    public boolean isPowerOfTwo(int x) {
-
-        return (x != 0) && ((x & (x - 1)) == 0);
     }
 
 

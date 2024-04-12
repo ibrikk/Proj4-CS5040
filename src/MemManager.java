@@ -36,6 +36,10 @@ public class MemManager {
      *            class definition for the Memory Manager
      */
     public MemManager(int poolSize) {
+        if (!Util.isPowerOfTwo(poolSize)) {
+            Util.print("Pool size is not power of two!");
+            return;
+        }
         this.memoryPool = new byte[poolSize];
         this.maxPower = (int)(Math.log(poolSize) / Math.log(2));
         this.freeLists = new LinkedList[maxPower + 1];
@@ -48,8 +52,9 @@ public class MemManager {
 
     public Handle insert(byte[] space, int size) {
         int requiredPower = 0;
-        while ((1 << requiredPower) < size)
+        while ((1 << requiredPower) < size) {
             requiredPower++;
+        }
         int blockSize = 1 << requiredPower;
 
         for (int i = requiredPower; i <= maxPower; i++) {

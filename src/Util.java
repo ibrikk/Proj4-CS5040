@@ -50,6 +50,18 @@ public class Util {
 
 
     /**
+     * @param x
+     *            - checking if x is power of 2
+     * 
+     * @return - true or false if the value inputted is powerOfTwo
+     */
+    public static boolean isPowerOfTwo(int x) {
+
+        return (x != 0) && ((x & (x - 1)) == 0);
+    }
+
+
+    /**
      * @param arr
      *            - can be used for hash table only (Will probably change this
      *            in the future)
