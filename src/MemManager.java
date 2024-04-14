@@ -55,8 +55,7 @@ public class MemManager {
         while ((1 << requiredPower) < space.length) {
             requiredPower++;
         }
-        int requiredSize = 1 << requiredPower; // Calculate the needed block
-                                               // size.
+        int requiredSize = 1 << requiredPower;
 
         // Attempt to find or split a block recursively starting from the
         // required power.
@@ -71,7 +70,8 @@ public class MemManager {
 
     private Handle findOrSplit(int requiredPowerIndex, int currentPowerIndex) {
         if (currentPowerIndex < requiredPowerIndex) {
-            return null; // Base case: No block small enough is available.
+            // Base case: No block small enough is available.
+            return null;
         }
 
         if (!freeLists[currentPowerIndex].isEmpty()) {
@@ -87,7 +87,6 @@ public class MemManager {
 
                 // Split the block into two halves
                 int newSize = 1 << currentPowerIndex;
-                // What?
                 int newStart = block.getStart() + newSize;
                 freeLists[currentPowerIndex - 1].add(newStart, newSize);
                 freeLists[currentPowerIndex - 1].add(block.getStart(), newSize);
@@ -103,11 +102,7 @@ public class MemManager {
     }
 
 
-    public int length(Handle theHandle) {
-        return theHandle.getLength();
-    }
-
-
+// TODO: Better testing required
     public void remove(Handle theHandle) {
         int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
         int buddyStart = theHandle.getStartingPos() ^ (1 << blockPower);
