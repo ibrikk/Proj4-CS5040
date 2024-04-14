@@ -55,6 +55,7 @@ public class MemManager {
         while ((1 << requiredPower) < space.length) {
             requiredPower++;
         }
+        // TODO: For debugging purposes, remove later
         int blockSize = 1 << requiredPower;
 
         for (int i = requiredPower; i <= maxPower; i++) {
