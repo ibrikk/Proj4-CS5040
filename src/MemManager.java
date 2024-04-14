@@ -42,11 +42,11 @@ public class MemManager {
         }
         this.memoryPool = new byte[poolSize];
         this.maxPower = (int)(Math.log(poolSize) / Math.log(2));
-        this.freeLists = new LinkedList[maxPower + 1];
-        for (int i = 0; i <= maxPower; i++) {
+        this.freeLists = new LinkedList[maxPower];
+        for (int i = 0; i < maxPower; i++) {
             freeLists[i] = new LinkedList();
         }
-        freeLists[maxPower].add(0, poolSize);
+        freeLists[maxPower - 1].add(0, poolSize);
     }
 
 
@@ -58,7 +58,7 @@ public class MemManager {
         // TODO: For debugging purposes, remove later
         int blockSize = 1 << requiredPower;
 
-        for (int i = requiredPower; i <= maxPower; i++) {
+        for (int i = requiredPower; i < maxPower; i++) {
             if (!freeLists[i].isEmpty()) {
                 // Split blocks until the correct size is achieved
                 while (i > requiredPower) {
@@ -121,12 +121,11 @@ public class MemManager {
 
 
     public void dump() {
-        for (int i = 0; i <= maxPower; i++) {
-            System.out.print("Size " + (1 << i) + ": ");
+        for (int i = 1; i <= maxPower; i++) {
+            System.out.print((1 << i) + ": ");
             ListNode current = freeLists[i].head;
             while (current != null) {
-                System.out.print("(" + current.getStart() + ", " + current
-                    .getSize() + ") ");
+                System.out.print(current.getStart() + " " + current.getSize());
                 current = current.getNext();
             }
             System.out.println();
