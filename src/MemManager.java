@@ -86,7 +86,7 @@ public class MemManager {
                 }
 
                 // Split the block into two halves
-                int newSize = 1 << currentPowerIndex;
+                int newSize = 1 << (currentPower - 1);
                 int newStart = block.getStart() + newSize;
                 freeLists[currentPowerIndex - 1].add(newStart, newSize);
                 freeLists[currentPowerIndex - 1].add(block.getStart(), newSize);
