@@ -133,11 +133,17 @@ public class MemManager {
         maxPower++;
         LinkedList[] newFreeLists = new LinkedList[maxPower + 1];
         System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
-        newFreeLists[maxPower] = new LinkedList();
+        int i = newFreeLists.length - 1;
+        while (newFreeLists[i] == null) {
+            newFreeLists[i] = new LinkedList();
+            i--;
+        }
+
         freeLists = newFreeLists;
 
         // Add the new additional memory as a free block
-        freeLists[maxPower].add(memoryPool.length / 2, memoryPool.length / 2);
+        freeLists[maxPower - 1].add(memoryPool.length / 2, memoryPool.length
+            / 2);
     }
 
 
