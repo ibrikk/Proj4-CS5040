@@ -29,6 +29,7 @@ public class MemManager {
     private byte[] memoryPool;
     private LinkedList[] freeLists;
     private int maxPower;
+    private boolean expanded = false;
 
     /**
      * @param initialMemorySize
@@ -85,8 +86,11 @@ public class MemManager {
         for (int currentPowerIndex =
             requiredPowerIndex; currentPowerIndex < maxPower; currentPowerIndex++) {
             if (!freeLists[currentPowerIndex].isEmpty()) {
-                ListNode block = freeLists[currentPowerIndex].findAndRemove(
-                    1 << (currentPowerIndex + 1));
+                ListNode block = expanded
+                    ? freeLists[currentPowerIndex].findAndRemove(
+                        1 << currentPowerIndex)
+                    : freeLists[currentPowerIndex].findAndRemove(
+                        1 << (currentPowerIndex + 1));
                 if (block != null) {
                     // If found the exact needed block size, return the handle
                     if (currentPowerIndex == requiredPowerIndex) {
@@ -145,6 +149,7 @@ public class MemManager {
         // TODO: Fix this index issue
         freeLists[maxPower - 1].add(memoryPool.length / 2, memoryPool.length
             / 2);
+        expanded = true;
     }
 
 
