@@ -62,8 +62,9 @@ public class MemManager {
             if (!freeLists[i].isEmpty()) {
                 // Split blocks until the correct size is achieved
                 while (i > requiredPower) {
-                    ListNode block = freeLists[i].findAndRemove(1 << i);
                     int currentSize = 1 << i;
+                    // TODO: Need to split, not just find and remove
+                    ListNode block = freeLists[i].findAndRemove(currentSize);
                     currentSize >>= 1;
                     freeLists[i - 1].add(block.getStart(), currentSize);
                     freeLists[i - 1].add(block.getStart() + currentSize,
