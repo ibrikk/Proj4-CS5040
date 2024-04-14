@@ -38,7 +38,8 @@ public class LinkedList {
 
 
     ListNode findAndRemove(int size) {
-        ListNode current = head, prev = null;
+        ListNode current = head;
+        ListNode prev = null;
         while (current != null && current.getSize() != size) {
             prev = current;
             current = current.getNext();

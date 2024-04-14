@@ -36,7 +36,7 @@ public class SemManagerTest extends TestCase {
 
         String[] args = new String[3];
 
-        args[0] = "512";
+        args[0] = "256";
 
         args[1] = "16";
 

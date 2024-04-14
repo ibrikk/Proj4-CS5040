@@ -123,17 +123,18 @@ public class MyHashTable {
      *            startPos of the byte and length
      * @return true if was able to insert.
      */
-    public boolean insert(int key, Record value) {
+    public boolean insert(Record record) {
 
         // Check for inserting a negative key
-        if (key < 0) {
-            Util.print(key + " key cannot be a negative value");
+        if (record.getSeminarId() < 0) {
+            Util.print(record.getSeminarId()
+                + " key cannot be a negative value");
             return false;
         }
-        int foundDuplicate = search(key);
+        int foundDuplicate = search(record.getSeminarId());
         if (foundDuplicate > -1) {
             Util.print("Insert FAILED - There is already a record with ID "
-                + key);
+                + record.getSeminarId());
 
             return false;
         }
@@ -144,18 +145,19 @@ public class MyHashTable {
             size = keyTable.length;
         }
 
-        int hash1 = hash1(key);
-        int hash2 = hash2(key);
+        int hash1 = hash1(record.getSeminarId());
+        int hash2 = hash2(record.getSeminarId());
 
         while (keyTable[hash1] != null && keyTable[hash1] != -1) {
             hash1 += hash2;
             hash1 %= size;
         }
 
-        keyTable[hash1] = (Integer)key;
-        values[hash1] = value;
+        keyTable[hash1] = (Integer)record.getSeminarId();
+        values[hash1] = record;
 
-        Util.print("Successfully inserted record with ID " + key);
+        Util.print("Successfully inserted record with ID " + record
+            .getSeminarId());
         return true;
     }
 

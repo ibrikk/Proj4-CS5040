@@ -50,9 +50,9 @@ public class MemManager {
     }
 
 
-    public Handle insert(byte[] space, int size) {
+    public Handle insert(byte[] space) {
         int requiredPower = 0;
-        while ((1 << requiredPower) < size) {
+        while ((1 << requiredPower) < space.length) {
             requiredPower++;
         }
         int blockSize = 1 << requiredPower;
@@ -71,8 +71,9 @@ public class MemManager {
                 }
                 ListNode block = freeLists[requiredPower].findAndRemove(
                     1 << requiredPower);
-                System.arraycopy(space, 0, memoryPool, block.getStart(), size);
-                return new Handle(block.getStart(), size);
+                System.arraycopy(space, 0, memoryPool, block.getStart(),
+                    space.length);
+                return new Handle(block.getStart(), space.length);
             }
         }
         return null; // Not enough memory

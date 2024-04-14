@@ -52,28 +52,27 @@ public class CommandProcessor {
      * 
      * @param lines
      *            from the command file
+     * @throws NoSuchFieldException
      */
 
     public void command(String[][] lines) throws NoSuchFieldException {
         String action = lines[0][0];
         switch (action) {
             case "insert":
-// Pretend getting Handle from mm
                 Seminar sem = createSeminar(lines);
-                int mockId = 0;
-                Handle mockFromMM = new Handle(7, 2345);
-                Record mockFromMMRec = new Record(mockId, mockFromMM);
-                int insertKey = Integer.parseInt(lines[0][1]);
-                boolean didInsert = hash.insert(insertKey, mockFromMMRec);
-                if (didInsert) {
-                    Util.print(sem.toString());
-                    try {
-                        byte[] serializedSem = sem.serialize();
-                        Util.print("Size: " + serializedSem.length);
+                int seminarId = sem.getId();
+                try {
+                    byte[] semBytes = sem.serialize();
+                    Handle handle = mm.insert(semBytes);
+                    Record record = new Record(seminarId, handle);
+                    boolean didInsert = hash.insert(record);
+                    if (didInsert) {
+                        Util.print(sem.toString());
+                        Util.print("Size: " + semBytes.length);
                     }
-                    catch (Exception e) {
-                        Util.print("Could not serialize Seminar");
-                    }
+                }
+                catch (Exception e) {
+                    Util.print("Could not serialize Seminar");
                 }
                 break;
             case "delete":
