@@ -94,17 +94,24 @@ public class MemManager {
                             1 << (currentPowerIndex + 1));
                     }
 
-                    // Otherwise, split the block and check the smaller size
-                    int newSize = 1 << currentPowerIndex;
-                    int newStart = block.getStart() + newSize;
+                    int targetSize = 1 << (requiredPowerIndex + 1);
+                    int start = block.getStart();
+                    int size = 1 << (currentPowerIndex + 1);
 
-                    // Add the two halves to the list at the next smaller size
-                    freeLists[currentPowerIndex - 1].add(newStart, newSize);
-                    freeLists[currentPowerIndex - 1].add(block.getStart(),
-                        newSize);
+                    // Split the block iteratively until the block size matches
+                    // the target size
+                    while (size > targetSize) {
+                        size >>= 1; // Halve the block size
+                        int nextStart = start + size;
 
-                    // Recursively find or split the newly added block
-                    return findOrSplit(requiredPowerIndex);
+                        // Add the second half to the free list
+                        freeLists[currentPowerIndex - 1].add(nextStart, size);
+                        currentPowerIndex--;
+                    }
+
+                    // Now the block size equals the target size, return this
+                    // newly sized block
+                    return new Handle(start, size);
                 }
             }
         }
