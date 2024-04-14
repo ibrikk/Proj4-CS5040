@@ -55,30 +55,51 @@ public class MemManager {
         while ((1 << requiredPower) < space.length) {
             requiredPower++;
         }
-        // TODO: For debugging purposes, remove later
-        int blockSize = 1 << requiredPower;
+        int requiredSize = 1 << requiredPower; // Calculate the needed block
+                                               // size.
 
-        for (int i = requiredPower; i < maxPower; i++) {
-            if (!freeLists[i].isEmpty()) {
-                // Split blocks until the correct size is achieved
-                while (i > requiredPower) {
-                    int currentSize = 1 << i;
-                    // TODO: Need to split, not just find and remove
-                    ListNode block = freeLists[i].findAndRemove(currentSize);
-                    currentSize >>= 1;
-                    freeLists[i - 1].add(block.getStart(), currentSize);
-                    freeLists[i - 1].add(block.getStart() + currentSize,
-                        currentSize);
-                    i--;
+        // Attempt to find or split a block recursively starting from the
+        // required power.
+        Handle handle = findOrSplit(requiredPower - 1, maxPower - 1);
+        if (handle != null) {
+            System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
+                space.length);
+        }
+        return handle;
+    }
+
+
+    private Handle findOrSplit(int requiredPowerIndex, int currentPowerIndex) {
+        if (currentPowerIndex < requiredPowerIndex) {
+            return null; // Base case: No block small enough is available.
+        }
+
+        if (!freeLists[currentPowerIndex].isEmpty()) {
+            int currentPower = currentPowerIndex + 1;
+            int currBlockSize = 1 << currentPower;
+            ListNode block = freeLists[currentPowerIndex].findAndRemove(
+                currBlockSize);
+            if (block != null) {
+                if (currentPowerIndex == requiredPowerIndex) {
+                    // Correct size block is found, return a new handle.
+                    return new Handle(block.getStart(), 1 << currentPower);
                 }
-                ListNode block = freeLists[requiredPower].findAndRemove(
-                    1 << requiredPower);
-                System.arraycopy(space, 0, memoryPool, block.getStart(),
-                    space.length);
-                return new Handle(block.getStart(), space.length);
+
+                // Split the block into two halves
+                int newSize = 1 << currentPowerIndex;
+                // What?
+                int newStart = block.getStart() + newSize;
+                freeLists[currentPowerIndex - 1].add(newStart, newSize);
+                freeLists[currentPowerIndex - 1].add(block.getStart(), newSize);
+
+                // Recursively try to find or split the block in the smaller
+                // size list
+                return findOrSplit(requiredPowerIndex, currentPowerIndex - 1);
             }
         }
-        return null; // Not enough memory
+
+        // Recursively check the next larger block
+        return findOrSplit(requiredPowerIndex, currentPowerIndex - 1);
     }
 
 

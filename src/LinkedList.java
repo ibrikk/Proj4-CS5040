@@ -44,8 +44,9 @@ public class LinkedList {
             prev = current;
             current = current.getNext();
         }
-        if (current == null)
+        if (current == null) {
             return null; // No suitable block found
+        }
 
         if (prev == null) {
             head = head.getNext();

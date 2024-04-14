@@ -40,7 +40,7 @@ public class SemManagerTest extends TestCase {
 
         args[1] = "16";
 
-        args[2] = "P1Hash_input.txt";
+        args[2] = "P1Sample_inputX.txt";
 
         systemOut().clearHistory();
 
@@ -48,7 +48,7 @@ public class SemManagerTest extends TestCase {
 
         String output = systemOut().getHistory();
 
-        String referenceOutput = SemManager.readFile("P1Hash_output.txt");
+        String referenceOutput = SemManager.readFile("P1Sample_outputX.txt");
 
         assertFuzzyEquals(referenceOutput, output);
 
