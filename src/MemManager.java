@@ -59,46 +59,78 @@ public class MemManager {
 
         // Attempt to find or split a block recursively starting from the
         // required power.
-        Handle handle = findOrSplit(requiredPower - 1, maxPower - 1);
+        Handle handle = findOrSplit(requiredPower - 1);
         if (handle != null) {
             System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
                 space.length);
+        }
+        else {
+            expandMemoryPool();
+            // After expanding, try to insert again
+            handle = findOrSplit(requiredPower - 1);
+            Util.print("Memory pool expanded to " + memoryPool.length
+                + " bytes");
+            if (handle == null) {
+                Util.print(
+                    "Failed to allocate memory even after expanding the memory pool.");
+            }
         }
         return handle;
     }
 
 
-    private Handle findOrSplit(int requiredPowerIndex, int currentPowerIndex) {
-        if (currentPowerIndex < requiredPowerIndex) {
-            // Base case: No block small enough is available.
-            return null;
-        }
+    private Handle findOrSplit(int requiredPowerIndex) {
+        // Attempt to find a suitable block from the smallest necessary size
+        // upwards
+        for (int currentPowerIndex =
+            requiredPowerIndex; currentPowerIndex < maxPower; currentPowerIndex++) {
+            if (!freeLists[currentPowerIndex].isEmpty()) {
+                ListNode block = freeLists[currentPowerIndex].findAndRemove(
+                    1 << (currentPowerIndex + 1));
+                if (block != null) {
+                    // If found the exact needed block size, return the handle
+                    if (currentPowerIndex == requiredPowerIndex) {
+                        return new Handle(block.getStart(),
+                            1 << (currentPowerIndex + 1));
+                    }
 
-        if (!freeLists[currentPowerIndex].isEmpty()) {
-            int currentPower = currentPowerIndex + 1;
-            int currBlockSize = 1 << currentPower;
-            ListNode block = freeLists[currentPowerIndex].findAndRemove(
-                currBlockSize);
-            if (block != null) {
-                if (currentPowerIndex == requiredPowerIndex) {
-                    // Correct size block is found, return a new handle.
-                    return new Handle(block.getStart(), 1 << currentPower);
+                    // Otherwise, split the block and check the smaller size
+                    int newSize = 1 << currentPowerIndex;
+                    int newStart = block.getStart() + newSize;
+
+                    // Add the two halves to the list at the next smaller size
+                    freeLists[currentPowerIndex - 1].add(newStart, newSize);
+                    freeLists[currentPowerIndex - 1].add(block.getStart(),
+                        newSize);
+
+                    // Recursively find or split the newly added block
+                    return findOrSplit(requiredPowerIndex);
                 }
-
-                // Split the block into two halves
-                int newSize = 1 << (currentPower - 1);
-                int newStart = block.getStart() + newSize;
-                freeLists[currentPowerIndex - 1].add(newStart, newSize);
-                freeLists[currentPowerIndex - 1].add(block.getStart(), newSize);
-
-                // Recursively try to find or split the block in the smaller
-                // size list
-                return findOrSplit(requiredPowerIndex, currentPowerIndex - 1);
             }
         }
 
-        // Recursively check the next larger block
-        return findOrSplit(requiredPowerIndex, currentPowerIndex - 1);
+        // If no suitable block is found after checking all levels up to
+        // maxPower, return null
+        return null;
+    }
+
+
+    private void expandMemoryPool() {
+        System.out.println("Expanding memory pool...");
+        int newSize = memoryPool.length * 2;
+        byte[] newMemoryPool = new byte[newSize];
+        System.arraycopy(memoryPool, 0, newMemoryPool, 0, memoryPool.length);
+        memoryPool = newMemoryPool; // Replace old memory pool with the new one
+
+        // Update maxPower and adjust freeLists for the new size
+        maxPower++;
+        LinkedList[] newFreeLists = new LinkedList[maxPower + 1];
+        System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
+        newFreeLists[maxPower] = new LinkedList();
+        freeLists = newFreeLists;
+
+        // Add the new additional memory as a free block
+        freeLists[maxPower].add(memoryPool.length / 2, memoryPool.length / 2);
     }
 
 
