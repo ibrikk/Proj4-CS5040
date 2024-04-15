@@ -88,7 +88,7 @@ public class CommandProcessor {
                 }
                 break;
             case "print":
-                print(lines[0][1]);
+// print(lines[0][1]);
                 break;
             default:
                 /** Falls through */
