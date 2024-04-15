@@ -86,11 +86,8 @@ public class MemManager {
         for (int currentPowerIndex =
             requiredPowerIndex; currentPowerIndex < maxPower; currentPowerIndex++) {
             if (!freeLists[currentPowerIndex].isEmpty()) {
-                ListNode block = expanded
-                    ? freeLists[currentPowerIndex].findAndRemove(
-                        1 << currentPowerIndex)
-                    : freeLists[currentPowerIndex].findAndRemove(
-                        1 << (currentPowerIndex + 1));
+                ListNode block = freeLists[currentPowerIndex].findAndRemove(
+                    1 << (currentPowerIndex + 1));
                 if (block != null) {
                     // If found the exact needed block size, return the handle
                     if (currentPowerIndex == requiredPowerIndex) {
@@ -135,19 +132,15 @@ public class MemManager {
 
         // Update maxPower and adjust freeLists for the new size
         maxPower++;
-        LinkedList[] newFreeLists = new LinkedList[maxPower + 1];
+        LinkedList[] newFreeLists = new LinkedList[maxPower];
         System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
-        int i = newFreeLists.length - 1;
-        while (newFreeLists[i] == null) {
-            newFreeLists[i] = new LinkedList();
-            i--;
-        }
+        newFreeLists[maxPower - 1] = new LinkedList();
 
         freeLists = newFreeLists;
 
         // Add the new additional memory as a free block
         // TODO: Fix this index issue
-        freeLists[maxPower - 1].add(memoryPool.length / 2, memoryPool.length
+        freeLists[maxPower - 2].add(memoryPool.length / 2, memoryPool.length
             / 2);
         expanded = true;
     }
