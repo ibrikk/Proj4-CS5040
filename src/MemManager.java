@@ -51,6 +51,11 @@ public class MemManager {
     }
 
 
+    public int getMemoryPoolLength() {
+        return memoryPool.length;
+    }
+
+
     public Handle insert(byte[] space) {
         int requiredPower = 0;
         while ((1 << requiredPower) < space.length) {
@@ -124,7 +129,6 @@ public class MemManager {
 
 
     private void expandMemoryPool() {
-        System.out.println("Expanding memory pool...");
         int newSize = memoryPool.length * 2;
         byte[] newMemoryPool = new byte[newSize];
         System.arraycopy(memoryPool, 0, newMemoryPool, 0, memoryPool.length);
