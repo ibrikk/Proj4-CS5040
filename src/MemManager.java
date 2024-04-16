@@ -190,16 +190,13 @@ public class MemManager {
                 if (isFreeListEmpty) {
                     isFreeListEmpty = false;
                 }
-                System.out.print((1 << (i + 1)) + ": ");
+                System.out.print((1 << (i + 1)) + ":");
             }
             while (current != null) {
-                System.out.print(current.getStart());
+                System.out.print(" " + current.getStart());
                 current = current.getNext();
                 if (current == null) {
                     Util.print();
-                }
-                else {
-                    System.out.print(" ");
                 }
             }
         }
