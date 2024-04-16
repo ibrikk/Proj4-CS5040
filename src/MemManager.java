@@ -151,38 +151,38 @@ public class MemManager {
 
 
 // TODO: Better testing required
-    public void remove(Handle theHandle) {
-        int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
-        int buddyStart = theHandle.getStartingPos() ^ (1 << blockPower);
-
-        ListNode buddy = null;
-        for (ListNode node = freeLists[blockPower].head; node != null; node =
-            node.getNext()) {
-            if (node.getStart() == buddyStart) {
-                buddy = node;
-                break;
-            }
-        }
-
-        if (buddy != null) {
-            freeLists[blockPower].remove(buddy.getStart(), buddy.getSize());
-            // Merge and free at a higher level
-            remove(new Handle(Math.min(theHandle.getStartingPos(), buddy
-                .getStart()), theHandle.getLength() * 2));
-        }
-        else {
-            freeLists[blockPower].add(theHandle.getStartingPos(), theHandle
-                .getLength());
-        }
-    }
-
-
-    public int get(byte[] space, Handle theHandle, int size) {
-        int bytesToCopy = Math.min(size, theHandle.getLength());
-        System.arraycopy(memoryPool, theHandle.getStartingPos(), space, 0,
-            bytesToCopy);
-        return bytesToCopy;
-    }
+// public void remove(Handle theHandle) {
+// int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
+// int buddyStart = theHandle.getStartingPos() ^ (1 << blockPower);
+//
+// ListNode buddy = null;
+// for (ListNode node = freeLists[blockPower].head; node != null; node =
+// node.getNext()) {
+// if (node.getStart() == buddyStart) {
+// buddy = node;
+// break;
+// }
+// }
+//
+// if (buddy != null) {
+// freeLists[blockPower].remove(buddy.getStart(), buddy.getSize());
+// // Merge and free at a higher level
+// remove(new Handle(Math.min(theHandle.getStartingPos(), buddy
+// .getStart()), theHandle.getLength() * 2));
+// }
+// else {
+// freeLists[blockPower].add(theHandle.getStartingPos(), theHandle
+// .getLength());
+// }
+// }
+//
+//
+// public int get(byte[] space, Handle theHandle, int size) {
+// int bytesToCopy = Math.min(size, theHandle.getLength());
+// System.arraycopy(memoryPool, theHandle.getStartingPos(), space, 0,
+// bytesToCopy);
+// return bytesToCopy;
+// }
 
 
     public void dump() {
