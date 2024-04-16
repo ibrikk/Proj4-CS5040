@@ -107,7 +107,7 @@ public class CommandProcessor {
                 break;
             case "blocks":
                 System.out.println("Freeblock List:");
-// mm.dump();
+                mm.dump();
                 break;
             default:
                 /** Falls through */
