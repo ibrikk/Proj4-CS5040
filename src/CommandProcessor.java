@@ -63,10 +63,8 @@ public class CommandProcessor {
                 int seminarId = sem.getId();
                 try {
                     byte[] serializedSem = sem.serialize();
-                    Handle handle = new Handle(7, 2345);
-// Handle handle = mm.insert(semBytes);
+                    Handle handle = mm.insert(serializedSem);
                     Record record = new Record(seminarId, handle);
-// Record record = new Record(seminarId, handle);
                     boolean didInsert = hash.insert(record);
                     if (didInsert) {
                         Util.print(sem.toString());
