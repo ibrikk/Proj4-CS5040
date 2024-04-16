@@ -29,7 +29,6 @@ public class MemManager {
     private byte[] memoryPool;
     private LinkedList[] freeLists;
     private int maxPower;
-    private boolean expanded = false;
 
     /**
      * @param initialMemorySize
@@ -146,9 +145,7 @@ public class MemManager {
         // TODO: Fix this index issue
         freeLists[maxPower - 2].add(memoryPool.length / 2, memoryPool.length
             / 2);
-        expanded = true;
     }
-
 
 // TODO: Better testing required
 // public void remove(Handle theHandle) {

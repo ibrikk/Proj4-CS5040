@@ -62,13 +62,15 @@ public class CommandProcessor {
                 Seminar sem = createSeminar(lines);
                 int seminarId = sem.getId();
                 try {
-                    byte[] semBytes = sem.serialize();
-                    Handle handle = mm.insert(semBytes);
+                    byte[] serializedSem = sem.serialize();
+                    Handle handle = new Handle(7, 2345);
+// Handle handle = mm.insert(semBytes);
                     Record record = new Record(seminarId, handle);
+// Record record = new Record(seminarId, handle);
                     boolean didInsert = hash.insert(record);
                     if (didInsert) {
                         Util.print(sem.toString());
-                        Util.print("Size: " + semBytes.length);
+                        Util.print("Size: " + serializedSem.length);
                     }
                 }
                 catch (Exception e) {
@@ -88,7 +90,7 @@ public class CommandProcessor {
                 }
                 break;
             case "print":
-// print(lines[0][1]);
+                print(lines[0][1]);
                 break;
             default:
                 /** Falls through */
@@ -107,7 +109,7 @@ public class CommandProcessor {
                 break;
             case "blocks":
                 System.out.println("Freeblock List:");
-                mm.dump();
+// mm.dump();
                 break;
             default:
                 /** Falls through */
