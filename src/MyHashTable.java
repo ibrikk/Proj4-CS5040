@@ -30,11 +30,13 @@ public class MyHashTable {
 /// Using Integer type because it supports null
     private Integer[] keyTable;
 
-    private Record[] values;
+    private HashableEntry[] values;
 
     private int size;
 
     private int usedSpaceCount;
+
+    private Tombstone tombstone = Tombstone.getInstance();
 
     /**
      * 
@@ -49,7 +51,7 @@ public class MyHashTable {
      * 
      * @return array of Handles
      */
-    public Record[] getValues() {
+    public HashableEntry[] getValues() {
         return values;
     }
 
@@ -86,7 +88,7 @@ public class MyHashTable {
             throw new IllegalArgumentException("Size must be a power of 2");
         }
         keyTable = new Integer[initialSize];
-        values = new Record[initialSize];
+        values = new HashableEntry[initialSize];
         size = initialSize;
         usedSpaceCount = 0;
     }
@@ -190,7 +192,7 @@ public class MyHashTable {
         }
         if (keyTable[hash1] == (Integer)key) {
             keyTable[hash1] = -1;
-            values[hash1] = null;
+            values[hash1] = tombstone;
 // printHashTable();
 // Util.printDiv();
             Util.print("Record with ID " + key
