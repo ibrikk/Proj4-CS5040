@@ -198,6 +198,9 @@ public class MemManager {
                 if (current == null) {
                     Util.print();
                 }
+                else {
+                    System.out.print(" ");
+                }
             }
         }
         if (isFreeListEmpty) {

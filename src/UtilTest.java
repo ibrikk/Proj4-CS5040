@@ -27,17 +27,17 @@ public class UtilTest extends TestCase {
      * Checks if the output was printed to the console
      */
 
-// @Test
-// public void testPrint() {
-// String[] arr = { "foo", "bar", "baz" };
-//
-// String expected = "foo, bar, baz" + System.lineSeparator();
-// systemOut().clearHistory();
-// Util.print(arr);
-//
-// assertEquals(systemOut().getHistory(), expected);
-//
-// }
+    @Test
+    public void testPrint() {
+        String[] arr = { "foo", "bar", "baz" };
+
+        String expected = "foo, bar, baz" + System.lineSeparator();
+        systemOut().clearHistory();
+        Util.print(arr);
+
+        assertEquals(systemOut().getHistory(), expected);
+
+    }
 
 
     /** Checking if initial size is power of two */
