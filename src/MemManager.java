@@ -183,7 +183,7 @@ public class MemManager {
 
 
     public void dump() {
-        for (int i = 1; i <= maxPower; i++) {
+        for (int i = 1; i < maxPower; i++) {
             ListNode current = freeLists[i].head;
             if (current != null) {
                 System.out.print((1 << (i + 1)) + ": ");
