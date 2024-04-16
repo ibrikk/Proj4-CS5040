@@ -81,6 +81,15 @@ public class Util {
 
 
     /**
+     * Printing from a new line
+     */
+
+    public static void print() {
+        System.out.println();
+    }
+
+
+    /**
      * Printing based on one string argument
      * 
      * @param str

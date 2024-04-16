@@ -183,18 +183,25 @@ public class MemManager {
 
 
     public void dump() {
+        boolean isFreeListEmpty = true;
         for (int i = 1; i < maxPower; i++) {
             ListNode current = freeLists[i].head;
             if (current != null) {
+                if (isFreeListEmpty) {
+                    isFreeListEmpty = false;
+                }
                 System.out.print((1 << (i + 1)) + ": ");
             }
             while (current != null) {
                 System.out.print(current.getStart());
                 current = current.getNext();
                 if (current == null) {
-                    System.out.println();
+                    Util.print();
                 }
             }
+        }
+        if (isFreeListEmpty) {
+            Util.print("There are no freeblocks in the memory pool");
         }
     }
 
