@@ -1,4 +1,3 @@
-import java.io.IOException;
 import org.junit.Before;
 import student.TestCase;
 
@@ -26,11 +25,11 @@ public class SemManagerTest extends TestCase {
      * 
      * Full parser test
      * 
-     * @throws IOException
+     * @throws Exception
      * 
      */
 
-    public void testparserfull() throws IOException {
+    public void testparserfull() throws Exception {
 
         String[] args = new String[3];
 

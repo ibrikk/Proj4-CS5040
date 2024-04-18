@@ -147,6 +147,14 @@ public class MemManager {
             / 2);
     }
 
+
+    public byte[] readBytes(Handle handle) {
+        byte[] data = new byte[handle.getLength()];
+        System.arraycopy(memoryPool, handle.getStartingPos(), data, 0, handle
+            .getLength());
+        return data;
+    }
+
 // TODO: Better testing required
 // public void remove(Handle theHandle) {
 // int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
@@ -199,21 +207,4 @@ public class MemManager {
         }
     }
 
-// // Writes data to the allocated block
-// public void writeData(Handle handle, byte[] data) {
-// if (data.length > handle.getLength()) {
-// throw new IllegalArgumentException("Data exceeds block size.");
-// }
-// System.arraycopy(data, 0, memoryPool, handle.getStartingPos(),
-// data.length);
-// }
-//
-//
-// // Reads data from the block
-// public byte[] readData(Handle handle) {
-// byte[] data = new byte[handle.getLength()];
-// System.arraycopy(memoryPool, handle.getStartingPos(), data, 0, handle
-// .getLength());
-// return data;
-// }
 }

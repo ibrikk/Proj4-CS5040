@@ -73,9 +73,10 @@ public class SemManager {
      * @param args
      *            - initial sizes of Memory pool, Hash table and name of the
      *            input file
+     * @throws Exception
      */
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Parser parser = createParser(args);
         if (parser == null) {
             return;

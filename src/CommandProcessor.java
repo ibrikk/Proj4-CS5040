@@ -50,10 +50,10 @@ public class CommandProcessor {
      * 
      * @param lines
      *            from the command file
-     * @throws NoSuchFieldException
+     * @throws Exception
      */
 
-    public void command(String[][] lines) throws NoSuchFieldException {
+    public void command(String[][] lines) throws Exception {
         String action = lines[0][0];
         switch (action) {
             case "insert":

@@ -21,15 +21,6 @@ public class Seminar implements Serializable {
     private int cost; // Seminar cost
     private int id; // Seminar ID
 
-    // ----------------------------------------------------------
-    /**
-     * Dummy seminar constructor
-     */
-    public Seminar() {
-        // Nothing here
-    }
-
-
     /**
      * Create a new Seminar object from the field data
      *

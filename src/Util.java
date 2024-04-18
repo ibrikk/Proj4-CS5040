@@ -123,6 +123,23 @@ public class Util {
     }
 
 
+    public static void print(Seminar sem) {
+        print("ID: " + sem.getId() + ", Title: " + sem.getTitle());
+        print("Date: " + sem.getDate() + ", Length: " + sem.getLength()
+            + ", X: " + sem.getX() + ", Y: " + sem.getY() + ", Cost: " + sem
+                .getCost());
+        print("Description: " + sem.getDescription());
+        String[] keywords = sem.getKeywords();
+        System.out.print("Keywords: ");
+        for (int i = 0; i < keywords.length; i++) {
+            System.out.print(keywords[i]);
+            if (i < keywords.length - 1) {
+                System.out.print(", ");
+            }
+        }
+    }
+
+
     /**
      * Prints ====== for better visualization
      */

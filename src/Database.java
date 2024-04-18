@@ -41,11 +41,12 @@ public class Database {
     }
 
 
-    public void find(int searchKey) {
-        int foundIndex = hash.find(searchKey, true);
-        if (foundIndex > -1) {
-            //
-// Get record from Memory and print.
+    public void find(int searchKey) throws Exception {
+        HashableEntry foundEntry = hash.find(searchKey, true);
+        if (foundEntry instanceof Record) {
+            byte[] serializedSem = mm.readBytes(foundEntry.getHandle());
+            Seminar sem = Seminar.deserialize(serializedSem);
+            Util.print(sem);
         }
     }
 
