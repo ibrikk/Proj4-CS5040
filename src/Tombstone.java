@@ -2,8 +2,8 @@
 public class Tombstone implements HashableEntry {
 
     private static final Tombstone INSTANCE = new Tombstone();
-    private final static int seminarId = -1;
-    private final static Handle handle = null;
+    private final static int SEMINARID = -1;
+    private final static Handle HANDLE = null;
 
     /**
      * Private constructor to prevent instantiation from outside the class.
@@ -24,13 +24,13 @@ public class Tombstone implements HashableEntry {
 
     @Override
     public int getSeminarId() {
-        return seminarId;
+        return SEMINARID;
     }
 
 
     @Override
     public Handle getHandle() {
-        return handle;
+        return HANDLE;
     }
 
 }
