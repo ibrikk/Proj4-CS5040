@@ -174,12 +174,6 @@ public class MemManager {
 // }
 //
 //
-// public int get(byte[] space, Handle theHandle, int size) {
-// int bytesToCopy = Math.min(size, theHandle.getLength());
-// System.arraycopy(memoryPool, theHandle.getStartingPos(), space, 0,
-// bytesToCopy);
-// return bytesToCopy;
-// }
 
 
     public void dump() {

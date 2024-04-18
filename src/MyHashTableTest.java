@@ -121,7 +121,7 @@ public class MyHashTableTest extends TestCase {
         }
         assertEquals(100, table.getUsedSpaceCount());
         for (int i = 0; i < 100; i++) {
-            assertEquals(i, table.search(i));
+            assertEquals(i, table.find(i));
         }
     }
 
@@ -136,11 +136,11 @@ public class MyHashTableTest extends TestCase {
         table.insert(new Record(3, new Handle(1, 4)));
         assertTrue(table.delete(3));
         assertFalse(table.delete(70));
-        assertEquals(-1, table.search(1));
+        assertEquals(-1, table.find(1));
         table.insert(new Record(4, new Handle(1, 4)));
 
         assertFalse(table.delete(-1));
-        assertEquals(-1, table.search(1));
+        assertEquals(-1, table.find(1));
     }
 
 
@@ -151,7 +151,7 @@ public class MyHashTableTest extends TestCase {
 
         table.delete(1);
 
-        assertEquals(-1, table.search(1));
+        assertEquals(-1, table.find(1));
     }
 
 
@@ -167,7 +167,7 @@ public class MyHashTableTest extends TestCase {
         assertEquals(32, table.getSize());
 
         for (int i = 0; i <= 8; i++) {
-            assertEquals(i, table.search(i));
+            assertEquals(i, table.find(i));
         }
     }
 
@@ -181,10 +181,10 @@ public class MyHashTableTest extends TestCase {
         table.insert(new Record(1, new Handle(1, 4)));
         table.insert(new Record(2, new Handle(12, 3)));
         table.delete(1);
-        assertEquals(-1, table.search(1));
-        assertEquals(2, table.search(2));
+        assertEquals(-1, table.find(1));
+        assertEquals(2, table.find(2));
         table.insert(new Record(66, new Handle(1, 4)));
-        assertEquals(11, table.search(66));
+        assertEquals(11, table.find(66));
     }
 
 
@@ -207,7 +207,7 @@ public class MyHashTableTest extends TestCase {
     public void testEmptyTableSearchDelete() {
         table = new MyHashTable(16);
         systemOut().clearHistory();
-        assertEquals(-1, table.search(1, true));
+        assertEquals(-1, table.find(1, true));
         assertEquals(systemOut().getHistory(),
             "Search FAILED -- There is no record with ID 1\n");
         systemOut().clearHistory();

@@ -119,7 +119,7 @@ public class MyHashTable {
             Util.print(seminarId + " key cannot be a negative value");
             return false;
         }
-        int foundDuplicate = search(seminarId);
+        int foundDuplicate = find(seminarId);
         if (foundDuplicate > -1) {
             Util.print("Insert FAILED - There is already a record with ID "
                 + seminarId);
@@ -194,9 +194,9 @@ public class MyHashTable {
      * @return search method itself, which will use the false boolean as default
      */
 
-    public int search(int key) {
+    public int find(int key) {
 
-        return search(key, false);
+        return find(key, false);
     }
 
 
@@ -210,7 +210,7 @@ public class MyHashTable {
      * @return the hash of the key or -1 if the ID was not found
      */
 
-    public int search(int key, boolean shouldPrint) {
+    public int find(int key, boolean shouldPrint) {
 
         int hash1 = hash1(key);
         int hash2 = hash2(key);

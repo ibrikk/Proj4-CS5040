@@ -28,9 +28,8 @@
  * 
  */
 public class CommandProcessor {
-    private static MemManager mm;
-    /** Using a hash table to store data */
-    private static MyHashTable hash;
+
+    private Database db;
 
     /**
      * This method will initialize MemManager and HashTable
@@ -41,8 +40,7 @@ public class CommandProcessor {
      *            the number of slot in the initial hash
      */
     public CommandProcessor(int initialMemorySize, int initialHashSize) {
-        mm = new MemManager(initialMemorySize);
-        hash = new MyHashTable(initialHashSize);
+        db = new Database(initialMemorySize, initialHashSize);
     }
 
 
@@ -60,54 +58,18 @@ public class CommandProcessor {
         switch (action) {
             case "insert":
                 Seminar sem = createSeminar(lines);
-                int seminarId = sem.getId();
-                try {
-                    byte[] serializedSem = sem.serialize();
-                    Handle handle = mm.insert(serializedSem);
-                    Record record = new Record(seminarId, handle);
-                    boolean didInsert = hash.insert(record);
-                    if (didInsert) {
-                        Util.print(sem.toString());
-                        Util.print("Size: " + serializedSem.length);
-                    }
-                }
-                catch (Exception e) {
-                    Util.print("Could not serialize Seminar");
-                }
+                db.insert(sem);
                 break;
             case "delete":
                 int deleteKey = Integer.parseInt(lines[0][1]);
-                hash.delete(deleteKey);
+                db.delete(deleteKey);
                 break;
             case "search":
                 int searchKey = Integer.parseInt(lines[0][1]);
-                int foundIndex = hash.search(searchKey, true);
-                if (foundIndex > -1) {
-                    //
-// Get record from Memory and print.
-                }
+                db.find(searchKey);
                 break;
             case "print":
-                print(lines[0][1]);
-                break;
-            default:
-                /** Falls through */
-                throw new NoSuchFieldException();
-        }
-    }
-
-
-    /** Custom Printing method */
-
-    private void print(String location) throws NoSuchFieldException {
-        switch (location) {
-            case "hashtable":
-                System.out.println("Hashtable:");
-                hash.printHashTable();
-                break;
-            case "blocks":
-                System.out.println("Freeblock List:");
-                mm.dump();
+                db.print(lines[0][1]);
                 break;
             default:
                 /** Falls through */
