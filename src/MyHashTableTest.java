@@ -29,8 +29,7 @@ public class MyHashTableTest extends TestCase {
 
     @Test
     public void testSanityCheck() {
-        assertTrue(table.getKeyTable().length == initialSize);
-        assertTrue(table.getValues().length == initialSize);
+        assertTrue(table.getHashTable().length == initialSize);
         assertTrue(table.getSize() == initialSize);
         assertTrue(table.getUsedSpaceCount() == 0);
     }
@@ -92,9 +91,9 @@ public class MyHashTableTest extends TestCase {
         table.insert(val4);
         table.insert(val5);
         table.insert(val6);
-        assertTrue(table.getKeyTable()[2].equals(66));
-        assertTrue(table.getKeyTable()[3].equals(2));
-        assertTrue(table.getKeyTable()[4].equals(3));
+        assertTrue(table.getHashTable()[2].getSeminarId() == 66);
+        assertTrue(table.getHashTable()[3].getSeminarId() == 2);
+        assertTrue(table.getHashTable()[4].getSeminarId() == 3);
     }
 
 

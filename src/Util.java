@@ -45,6 +45,7 @@ public class Util {
         for (int i = 0; i < arr.length; i++) {
             newArr[i] = arr[i];
         }
+        print("Hash table expanded to " + newArr.length + " records");
         return newArr;
     }
 
@@ -58,25 +59,6 @@ public class Util {
     public static boolean isPowerOfTwo(int x) {
 
         return (x != 0) && ((x & (x - 1)) == 0);
-    }
-
-
-    /**
-     * @param arr
-     *            - can be used for hash table only (Will probably change this
-     *            in the future)
-     * 
-     * @return - newArr
-     */
-
-    public static Integer[] doubleSizeHashTableKeysArray(Integer[] arr) {
-        int newArrSize = arr.length * 2;
-        Integer[] newArr = new Integer[newArrSize];
-        for (int i = 0; i < arr.length; i++) {
-            newArr[i] = arr[i];
-        }
-        System.out.println("Hash table expanded to " + newArrSize + " records");
-        return newArr;
     }
 
 

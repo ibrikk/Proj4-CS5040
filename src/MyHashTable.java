@@ -27,10 +27,7 @@
  */
 public class MyHashTable {
 
-/// Using Integer type because it supports null
-    private Integer[] keyTable;
-
-    private HashableEntry[] values;
+    private HashableEntry[] hashTable;
 
     private int size;
 
@@ -40,19 +37,10 @@ public class MyHashTable {
 
     /**
      * 
-     * @return array of keys
-     */
-    public Integer[] getKeyTable() {
-        return keyTable;
-    }
-
-
-    /**
-     * 
      * @return array of Handles
      */
-    public HashableEntry[] getValues() {
-        return values;
+    public HashableEntry[] getHashTable() {
+        return hashTable;
     }
 
 
@@ -87,8 +75,7 @@ public class MyHashTable {
         if (!Util.isPowerOfTwo(initialSize)) {
             throw new IllegalArgumentException("Size must be a power of 2");
         }
-        keyTable = new Integer[initialSize];
-        values = new HashableEntry[initialSize];
+        hashTable = new HashableEntry[initialSize];
         size = initialSize;
         usedSpaceCount = 0;
     }
@@ -141,21 +128,19 @@ public class MyHashTable {
         }
         usedSpaceCount++;
         if (usedSpaceCount > (size / 2)) {
-            keyTable = Util.doubleSizeHashTableKeysArray(keyTable);
-            values = Util.doubleSize(values);
-            size = keyTable.length;
+            hashTable = Util.doubleSize(hashTable);
+            size = hashTable.length;
         }
 
         int hash1 = hash1(seminarId);
         int hash2 = hash2(seminarId);
 
-        while (keyTable[hash1] != null && keyTable[hash1] != -1) {
+        while (hashTable[hash1] != null
+            && !(hashTable[hash1] instanceof Tombstone)) {
             hash1 += hash2;
             hash1 %= size;
         }
-
-        keyTable[hash1] = (Integer)seminarId;
-        values[hash1] = record;
+        hashTable[hash1] = record;
 
         Util.print("Successfully inserted record with ID " + seminarId);
         return true;
@@ -180,21 +165,18 @@ public class MyHashTable {
         int hash2 = hash2(key);
         // Keep track of search attempts.
         int tries = 0;
-        while ((keyTable[hash1] == null || keyTable[hash1] != (Integer)key)
-            && tries < size) {
+        while ((hashTable[hash1] == null || hashTable[hash1]
+            .getSeminarId() != (Integer)key) && tries < size) {
             hash1 += hash2;
             hash1 %= size;
             tries++;
         }
-        if (keyTable[hash1] == null || keyTable[hash1] == -1) {
+        if (hashTable[hash1] == null || hashTable[hash1] instanceof Tombstone) {
             Util.print("Delete FAILED -- There is no record with ID " + key);
             return false;
         }
-        if (keyTable[hash1] == (Integer)key) {
-            keyTable[hash1] = -1;
-            values[hash1] = tombstone;
-// printHashTable();
-// Util.printDiv();
+        if (hashTable[hash1].getSeminarId() == (Integer)key) {
+            hashTable[hash1] = tombstone;
             Util.print("Record with ID " + key
                 + " successfully deleted from the database");
             usedSpaceCount--;
@@ -235,15 +217,17 @@ public class MyHashTable {
         // Keep track of search attempts.
         int tries = 0;
         /// Casting int key to Integer so that the comparison runs
-        while (keyTable[hash1] != (Integer)key && tries < size) {
+        while (hashTable[hash1] != null && hashTable[hash1]
+            .getSeminarId() != (Integer)key && tries < size) {
             hash1 += hash2;
             hash1 %= size;
             tries++;
         }
-        if (keyTable[hash1] == (Integer)key) {
+        if (hashTable[hash1] != null && hashTable[hash1]
+            .getSeminarId() == (Integer)key) {
             if (shouldPrint) {
-                Util.print("Found record with ID " + keyTable[hash1].toString()
-                    + ":");
+                Util.print("Found record with ID " + hashTable[hash1]
+                    .getSeminarId() + ":");
             }
             return hash1;
         }
@@ -260,9 +244,9 @@ public class MyHashTable {
         int i = 0;
         int itemCount = 0;
         while (i < size) {
-            if (keyTable[i] != null) {
-                if (keyTable[i] != -1) {
-                    Util.print(i + ": " + keyTable[i]);
+            if (hashTable[i] != null) {
+                if (!(hashTable[i] instanceof Tombstone)) {
+                    Util.print(i + ": " + hashTable[i].getSeminarId());
                     itemCount++;
                 }
                 else {

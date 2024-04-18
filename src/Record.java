@@ -35,19 +35,15 @@ public class Record implements HashableEntry {
     }
 
 
+    @Override
     public int getSeminarId() {
         return seminarId;
     }
 
 
+    @Override
     public Handle getHandle() {
         return handle;
-    }
-
-
-    @Override
-    public boolean isTombstone() {
-        return false;
     }
 
 }

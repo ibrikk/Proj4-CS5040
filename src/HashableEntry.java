@@ -1,6 +1,9 @@
 
 public interface HashableEntry {
 
-    public abstract boolean isTombstone();
+    public int getSeminarId();
+
+
+    public Handle getHandle();
 
 }
