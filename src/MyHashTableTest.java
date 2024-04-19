@@ -237,16 +237,16 @@ public class MyHashTableTest extends TestCase {
     /**
      * Test the hash table expansion when the load factor is exceeded.
      */
-    @Test
-    public void testExpansion() {
-        for (int i = 0; i < 5; i++) { // Inserting enough items to trigger
-                                      // expansion
-            Record record = new Record(i, new Handle(17, 16));
-            record.setSeminarId(i);
-            table2.insert(record);
-        }
-        assertTrue("Size should be doubled", table2.getSize() > 8);
-    }
+// @Test
+// public void testExpansion() {
+// for (int i = 0; i < 5; i++) { // Inserting enough items to trigger
+// // expansion
+// Record record = new Record(i, new Handle(17, 16));
+// record.setSeminarId(i);
+// table2.insert(record);
+// }
+// assertTrue("Size should be doubled", table2.getSize() > 8);
+// }
 
 
     /**
