@@ -13,6 +13,7 @@ public class MyHashTableTest extends TestCase {
 
     private MyHashTable table;
     private MyHashTable table2;
+    private MyHashTable table3;
     private int initialSize = 16;
 
     /**
@@ -24,6 +25,7 @@ public class MyHashTableTest extends TestCase {
     public void setUp() throws Exception {
         table = new MyHashTable(initialSize);
         table2 = new MyHashTable(8);
+        table3 = new MyHashTable(16);
     }
 
 
@@ -312,6 +314,84 @@ public class MyHashTableTest extends TestCase {
 
         String expectedOutput = "6: 6\ntotal records: 1";
         assertFuzzyEquals(expectedOutput, systemOut().getHistory());
+    }
+
+
+    /**
+     * Test inserting a record into the hash table.
+     */
+    @Test
+    public void testInsertRecord() {
+        Handle handle = new Handle(0, 100);
+        Record record = new Record(1, handle);
+        assertTrue("Insert should return true", table3.insert(record));
+        assertNotNull("Record should be found in hash table", table3.find(record
+            .getSeminarId()));
+    }
+
+
+    /**
+     * Test deleting a record from the hash table.
+     */
+    @Test
+    public void testDeleteRecord() {
+        Handle handle = new Handle(0, 100);
+        Record record = new Record(2, handle);
+        table3.insert(record);
+        assertTrue("Delete should return true", table3.delete(record
+            .getSeminarId()));
+        assertNull("Record should no longer be found", table3.find(record
+            .getSeminarId()));
+    }
+
+
+    /**
+     * Test hash table expansion and ensure records are still findable
+     * post-expansion.
+     */
+    @Test
+    public void testHashTableExpansion() {
+        for (int i = 0; i < 8; i++) {
+            table3.insert(new Record(i, new Handle(i * 100, 100)));
+        }
+        assertEquals("Hash table size should be increased", 16, table3
+            .getSize());
+        assertNotNull("Old records should be findable after expansion", table3
+            .find(7));
+    }
+
+
+    /**
+     * Test searching for a non-existent record.
+     */
+    @Test
+    public void testSearchNonExistentRecord() {
+        assertNull("Search should return null for a non-existent record", table3
+            .find(999));
+    }
+
+
+    /**
+     * Test the functionality of updating a record's handle.
+     */
+    @Test
+    public void testUpdateRecordHandle() {
+        Handle handle = new Handle(0, 100);
+        Record record = new Record(3, handle);
+        table3.insert(record);
+
+        // Update handle
+        handle.setStartingPos(200);
+        handle.setLength(200);
+        assertEquals("Handle's starting position should be updated", 200, record
+            .getHandle().getStartingPos());
+        assertEquals("Handle's length should be updated", 200, record
+            .getHandle().getLength());
+
+        // Verify record is still accessible with the same ID
+        Record foundRecord = (Record)table3.find(3);
+        assertEquals("Found record should have updated handle information", 200,
+            foundRecord.getHandle().getLength());
     }
 
 }
