@@ -128,6 +128,8 @@ public class MyHashTable {
         }
         usedSpaceCount++;
         if (usedSpaceCount > (size / 2)) {
+            // TODO: It considers tombstone as full but maybe considered as
+            // empty????
             hashTable = Util.doubleSize(hashTable);
             size = hashTable.length;
         }
