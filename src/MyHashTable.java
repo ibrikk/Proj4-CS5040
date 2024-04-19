@@ -264,36 +264,35 @@ public class MyHashTable {
         int hashIndex = hash1(key);
         int step = hash2(key);
         int initialIndex = hashIndex;
-        boolean wrappedAround = false;
-        int tries = 0;
+        int attempts = 0;
 
-        while (hashTable[hashIndex] != null && tries < size) {
-            if (hashTable[hashIndex] instanceof Tombstone
-                || hashTable[hashIndex].getSeminarId() != key) {
-                hashIndex = (hashIndex + step) % size;
-                if (hashIndex == initialIndex && wrappedAround) {
-                    break; // Prevent infinite looping
+        while (attempts < size) { // Ensure we don't loop indefinitely
+            HashableEntry entry = hashTable[hashIndex];
+            if (entry == null) {
+                if (shouldPrint) {
+                    Util.print("Search FAILED -- There is no record with ID "
+                        + key);
                 }
-                if (hashIndex == initialIndex)
-                    wrappedAround = true;
+                return null;
             }
-            else {
-                break; // Found the correct entry
+            else if (!(entry instanceof Tombstone) && entry
+                .getSeminarId() == key) {
+                if (shouldPrint) {
+                    Util.print("Found record with ID " + key);
+                }
+                return entry;
             }
+            hashIndex = (hashIndex + step) % size;
+            if (hashIndex == initialIndex)
+                break; // If we've looped all the way around, stop
+            attempts++;
         }
 
-        if (hashTable[hashIndex] != null && hashTable[hashIndex]
-            .getSeminarId() == key) {
-            if (shouldPrint)
-                Util.print("Found record with ID " + key);
-            return hashTable[hashIndex];
+        if (shouldPrint) {
+            Util.print("Search FAILED -- Negative keys are not allowed: "
+                + key);
         }
-        else {
-            if (shouldPrint)
-                Util.print("Search FAILED -- There is no record with ID "
-                    + key);
-            return null;
-        }
+        return null;
     }
 
 
