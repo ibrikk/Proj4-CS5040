@@ -45,6 +45,13 @@ public class Record implements HashableEntry {
     public Handle getHandle() {
         return handle;
     }
+    
+    /* 
+     * For testing purposes
+     * */
+    public void setSeminarId(int id) {
+        seminarId = id;
+    }
 
 }
 

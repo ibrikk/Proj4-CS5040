@@ -12,6 +12,7 @@ import org.junit.Test;
 public class MyHashTableTest extends TestCase {
 
     private MyHashTable table;
+    private MyHashTable table2;
     private int initialSize = 16;
 
     /**
@@ -22,6 +23,7 @@ public class MyHashTableTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         table = new MyHashTable(initialSize);
+        table2 = new MyHashTable(8);
     }
 
 
@@ -216,4 +218,100 @@ public class MyHashTableTest extends TestCase {
         assertEquals(systemOut().getHistory(),
             "Delete FAILED -- There is no record with ID 1\n");
     }
+
+
+    /**
+     * Test the insertion of a single record into the hash table.
+     */
+    @Test
+    public void testInsert2() {
+        Record record = new Record(1, new Handle(0, 16));
+        assertTrue("Insert should succeed", table2.insert(record));
+        assertEquals("Used space count should be 1 after insert", 1, table2
+            .getUsedSpaceCount());
+    }
+
+
+    /**
+     * Test the hash table expansion when the load factor is exceeded.
+     */
+    @Test
+    public void testExpansion() {
+        for (int i = 0; i < 5; i++) { // Inserting enough items to trigger
+                                      // expansion
+            Record record = new Record(i, new Handle(17, 16));
+            record.setSeminarId(i);
+            table2.insert(record);
+        }
+        assertTrue("Size should be doubled", table2.getSize() > 8);
+    }
+
+
+    /**
+     * Test deleting a record from the hash table.
+     */
+    @Test
+    public void testDelete() {
+        Record record = new Record(3, new Handle(0, 16));
+        record.setSeminarId(2);
+        table2.insert(record);
+        assertTrue("Delete should succeed", table2.delete(2));
+        assertNull("Record should be null after deletion", table2.find(2));
+    }
+
+
+    /**
+     * Test finding a record in the hash table.
+     */
+    @Test
+    public void testFind() {
+        Record record = new Record(3, new Handle(0, 16));
+        record.setSeminarId(3);
+        table2.insert(record);
+        assertNotNull("Find should return a record", table2.find(3));
+    }
+
+
+    /**
+     * Test handling of tombstones during insertion and deletion.
+     */
+    @Test
+    public void testTombstonesHandling() {
+        Record record1 = new Record(3, new Handle(0, 16));
+        record1.setSeminarId(4);
+        Record record2 = new Record(5, new Handle(32, 32));
+        record2.setSeminarId(5);
+
+        table2.insert(record1);
+        table2.insert(record2);
+        table2.delete(4); // This should create a tombstone
+
+        assertNotNull("Should find second record even after first is deleted",
+            table2.find(5));
+        assertTrue("Inserting where a tombstone exists should succeed", table2
+            .insert(record1));
+
+        Record record3 = new Record(4, new Handle(32, 32));
+        table2.insert(record3);
+
+        assertNotNull("Should find second record even after first is deleted",
+            table2.find(4));
+    }
+
+
+    /**
+     * Test printing the hash table.
+     */
+    @Test
+    public void testPrintHashTable2() {
+        Record record = new Record(5, new Handle(64, 128));
+        record.setSeminarId(6);
+        table2.insert(record);
+        systemOut().clearHistory();
+        table2.printHashTable();
+
+        String expectedOutput = "6: 6\ntotal records: 1";
+        assertFuzzyEquals(expectedOutput, systemOut().getHistory());
+    }
+
 }
