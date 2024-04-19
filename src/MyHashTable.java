@@ -245,12 +245,12 @@ public class MyHashTable {
         int itemCount = 0;
         while (i < size) {
             if (hashTable[i] != null) {
-                if (!(hashTable[i] instanceof Tombstone)) {
-                    Util.print(i + ": " + hashTable[i].getSeminarId());
-                    itemCount++;
+                if (hashTable[i] instanceof Tombstone) {
+                    Util.print(i + ": TOMBSTONE");
                 }
                 else {
-                    Util.print(i + ": TOMBSTONE");
+                    Util.print(i + ": " + hashTable[i].getSeminarId());
+                    itemCount++;
                 }
             }
             i++;

@@ -1,7 +1,6 @@
 
 public class Database {
     private static MemManager mm;
-    /** Using a hash table to store data */
     private static MyHashTable hash;
 
     /**

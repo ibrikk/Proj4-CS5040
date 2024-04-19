@@ -142,7 +142,6 @@ public class MemManager {
         freeLists = newFreeLists;
 
         // Add the new additional memory as a free block
-        // TODO: Fix this index issue
         freeLists[maxPower - 2].add(memoryPool.length / 2, memoryPool.length
             / 2);
     }
