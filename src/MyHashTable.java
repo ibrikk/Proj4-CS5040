@@ -179,7 +179,6 @@ public class MyHashTable {
             hashTable[hash1] = tombstone;
             Util.print("Record with ID " + key
                 + " successfully deleted from the database");
-            usedSpaceCount--;
             return true;
         }
         return false;
