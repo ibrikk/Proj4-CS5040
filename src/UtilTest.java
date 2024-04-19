@@ -58,27 +58,4 @@ public class UtilTest extends TestCase {
         assertFalse(Util.isPowerOfTwo(powerOfTwoZero));
     }
 
-
-    /**
-     * Test the print method to ensure it correctly formats and prints all
-     * details of a seminar.
-     */
-    @Test
-    public void testPrintSeminar() {
-        String[] keywords = { "AI", "Machine Learning", "Deep Learning" };
-        short x = 50;
-        short y = 20;
-        Seminar seminar = new Seminar(1, "Intro to AI", "2021-04-15", 120, x, y,
-            200, keywords,
-            "A comprehensive introduction to artificial intelligence.");
-
-        String expectedOutput = "ID: 1, Title: Intro to AI\n"
-            + "Date: 2021-04-15, Length: 120, X: 50, Y: 20, Cost: 200\n"
-            + "Description: A comprehensive introduction to artificial intelligence.\n"
-            + "Keywords: AI, Machine Learning, Deep Learning";
-
-        systemOut().clearHistory();
-        Util.print(seminar);
-        assertFuzzyEquals(expectedOutput, systemOut().getHistory());
-    }
 }

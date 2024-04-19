@@ -36,7 +36,7 @@ public class SemManagerTest extends TestCase {
 // args[0] = "1024";
         args[0] = "256";
 
-        args[1] = "16";
+        args[1] = "4";
 
 // args[2] = "P1Sample_inputX.txt";
         args[2] = "Simple_insert_in.txt";

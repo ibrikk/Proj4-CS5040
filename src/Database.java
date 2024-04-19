@@ -45,7 +45,7 @@ public class Database {
         if (foundEntry instanceof Record) {
             byte[] serializedSem = mm.readBytes(foundEntry.getHandle());
             Seminar sem = Seminar.deserialize(serializedSem);
-            Util.print(sem);
+            sem.toString();
         }
     }
 

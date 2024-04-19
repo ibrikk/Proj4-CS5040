@@ -61,10 +61,9 @@ public class MemManager {
             requiredPower++;
         }
         int requiredSize = 1 << requiredPower;
-
         // Attempt to find or split a block recursively starting from the
         // required power.
-        Handle handle = findOrSplit(requiredPower - 1);
+        Handle handle = findOrSplit(requiredPower - 1, space.length);
         if (handle != null) {
             System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
                 space.length);
@@ -72,19 +71,24 @@ public class MemManager {
         else {
             expandMemoryPool();
             // After expanding, try to insert again
-            handle = findOrSplit(requiredPower - 1);
+            handle = findOrSplit(requiredPower - 1, space.length);
             Util.print("Memory pool expanded to " + memoryPool.length
                 + " bytes");
             if (handle == null) {
                 Util.print(
                     "Failed to allocate memory even after expanding the memory pool.");
             }
+            else {
+                System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
+                    space.length);
+            }
+
         }
         return handle;
     }
 
 
-    private Handle findOrSplit(int requiredPowerIndex) {
+    private Handle findOrSplit(int requiredPowerIndex, int spaceLength) {
         // Attempt to find a suitable block from the smallest necessary size
         // upwards
         for (int currentPowerIndex =
@@ -95,8 +99,7 @@ public class MemManager {
                 if (block != null) {
                     // If found the exact needed block size, return the handle
                     if (currentPowerIndex == requiredPowerIndex) {
-                        return new Handle(block.getStart(),
-                            1 << (currentPowerIndex + 1));
+                        return new Handle(block.getStart(), spaceLength);
                     }
 
                     int targetSize = 1 << (requiredPowerIndex + 1);
@@ -113,10 +116,7 @@ public class MemManager {
                         freeLists[currentPowerIndex - 1].add(nextStart, size);
                         currentPowerIndex--;
                     }
-
-                    // Now the block size equals the target size, return this
-                    // newly sized block
-                    return new Handle(start, size);
+                    return new Handle(start, spaceLength);
                 }
             }
         }
