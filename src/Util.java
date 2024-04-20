@@ -125,8 +125,9 @@ public class Util {
 
     public static boolean isMemoryCleared(byte[] memory) {
         for (byte b : memory) {
-            if (b != 0)
+            if (b != 0) {
                 return false;
+            }
         }
         return true;
     }
