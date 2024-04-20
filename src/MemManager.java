@@ -154,33 +154,68 @@ public class MemManager {
         return data;
     }
 
+
 // TODO: Better testing required
-// public void remove(Handle theHandle) {
-// int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
-// int buddyStart = theHandle.getStartingPos() ^ (1 << blockPower);
-//
-// ListNode buddy = null;
-// for (ListNode node = freeLists[blockPower].head; node != null; node =
-// node.getNext()) {
-// if (node.getStart() == buddyStart) {
-// buddy = node;
-// break;
-// }
-// }
-//
-// if (buddy != null) {
-// freeLists[blockPower].remove(buddy.getStart(), buddy.getSize());
-// // Merge and free at a higher level
-// remove(new Handle(Math.min(theHandle.getStartingPos(), buddy
-// .getStart()), theHandle.getLength() * 2));
-// }
-// else {
-// freeLists[blockPower].add(theHandle.getStartingPos(), theHandle
-// .getLength());
-// }
-// }
-//
-//
+    public void remove(Handle theHandle) {
+        int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
+        int buddySize = (1 << (blockPower + 1));
+        int buddyStart = theHandle.getStartingPos() ^ buddySize;
+
+        ListNode buddy = findAndRemoveFromList(buddyStart, buddySize,
+            blockPower);
+        if (buddy != null) {
+            // Buddy found and removed, merge them
+            int mergedStart = Math.min(theHandle.getStartingPos(), buddyStart);
+            int mergedSize = theHandle.getLength() * 2;
+
+            // Create a new handle for the merged block and attempt further
+            // merging
+            Handle mergedHandle = new Handle(mergedStart, mergedSize);
+            remove(mergedHandle); // Recursive call to try further merging
+        }
+        else {
+            // No buddy found, add the current block to the free list
+            addToFreeList(theHandle.getStartingPos(), theHandle.getLength(),
+                blockPower);
+
+            clearMemory(theHandle.getStartingPos(), theHandle.getLength());
+        }
+    }
+
+
+    private ListNode findAndRemoveFromList(
+        int start,
+        int size,
+        int powerIndex) {
+        ListNode current = freeLists[powerIndex].head;
+        ListNode prev = null;
+        while (current != null) {
+            if (current.getStart() == start && current.getSize() == size) {
+                if (prev == null) {
+                    freeLists[powerIndex].head = current.getNext();
+                }
+                else {
+                    prev.setNext(current.getNext());
+                }
+                return current;
+            }
+            prev = current;
+            current = current.getNext();
+        }
+        return null; // Buddy not found
+    }
+
+
+    private void addToFreeList(int start, int size, int powerIndex) {
+        freeLists[powerIndex].add(start, size);
+    }
+
+
+    private void clearMemory(int start, int length) {
+        for (int i = start; i < start + length; i++) {
+            memoryPool[i] = 0;
+        }
+    }
 
 
     public void dump() {
@@ -204,6 +239,21 @@ public class MemManager {
         if (isFreeListEmpty) {
             Util.print("There are no freeblocks in the memory pool");
         }
+    }
+
+
+    public int getLargestFreeBlockSize() {
+        int largestSize = 0;
+        for (LinkedList list : freeLists) {
+            ListNode node = list.head;
+            while (node != null) {
+                if (node.getSize() > largestSize) {
+                    largestSize = node.getSize();
+                }
+                node = node.getNext();
+            }
+        }
+        return largestSize;
     }
 
 }

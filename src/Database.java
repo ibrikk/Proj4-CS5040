@@ -36,7 +36,13 @@ public class Database {
 
 
     public void delete(int deleteKey) {
-        hash.delete(deleteKey);
+        Record deletedRecord = hash.delete(deleteKey);
+        if (deletedRecord == null) {
+            return;
+        }
+        mm.remove(deletedRecord.getHandle());
+        Util.print("Record with ID " + deletedRecord.getSeminarId()
+            + " successfully deleted from the database");
     }
 
 

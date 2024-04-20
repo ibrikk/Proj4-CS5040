@@ -91,4 +91,54 @@ public class MemManagerTest extends TestCase {
             manager.getMemoryPoolLength() >= 1024 * 11);
     }
 
+
+    /**
+     * Test inserting a block and then removing it.
+     */
+    @Test
+    public void testInsertAndRemove() {
+        byte[] data = new byte[128]; // Smaller than the total size
+        Handle handle = manager.insert(data);
+        assertNotNull("Handle should not be null after insertion", handle);
+
+        manager.remove(handle);
+        // Check if memory is cleared
+        byte[] clearedMemory = manager.readBytes(handle);
+        assertTrue("Memory should be cleared after removal", Util
+            .isMemoryCleared(clearedMemory));
+    }
+
+
+    /**
+     * Test removing a block and verifying if it merges with its buddy
+     * correctly.
+     */
+    @Test
+    public void testMergeWithBuddy() {
+        byte[] data = new byte[256];
+        Handle handle1 = manager.insert(data);
+        Handle handle2 = manager.insert(data);
+
+        manager.remove(handle1);
+        manager.remove(handle2); // Should trigger merging
+
+        // Assuming there's a method to get the size of the largest free block
+        int largestFreeBlock = manager.getLargestFreeBlockSize();
+        assertEquals("Blocks should merge to form a larger free block", 512,
+            largestFreeBlock);
+    }
+
+
+    /**
+     * Test that inserting more than the available memory triggers an expansion.
+     */
+    @Test
+    public void testMemoryExpansion2() {
+        byte[] largeData = new byte[2048]; // Larger than the initial size
+        Handle handle = manager.insert(largeData);
+        assertNull("Memory should expand to accommodate large blocks", handle);
+        assertTrue("Memory pool should expand", manager
+            .getMemoryPoolLength() > 1024);
+    }
+
 }

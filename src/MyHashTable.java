@@ -204,12 +204,12 @@ public class MyHashTable {
      *            array
      * @return true if found and deleted.
      */
-    public boolean delete(int key) {
+    public Record delete(int key) {
 
         // Check for deleting a negative key
         if (key < 0) {
             Util.print(key + " key cannot be a negative value");
-            return false;
+            return null;
         }
 
         int hash1 = hash1(key);
@@ -224,15 +224,14 @@ public class MyHashTable {
         }
         if (hashTable[hash1] == null || hashTable[hash1] instanceof Tombstone) {
             Util.print("Delete FAILED -- There is no record with ID " + key);
-            return false;
+            return null;
         }
         if (hashTable[hash1].getSeminarId() == (Integer)key) {
+            Record removed = (Record)hashTable[hash1];
             hashTable[hash1] = tombstone;
-            Util.print("Record with ID " + key
-                + " successfully deleted from the database");
-            return true;
+            return removed;
         }
-        return false;
+        return null;
     }
 
 

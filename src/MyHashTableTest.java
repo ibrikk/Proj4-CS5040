@@ -138,12 +138,12 @@ public class MyHashTableTest extends TestCase {
         table.insert(new Record(66, new Handle(1, 4)));
         table.insert(new Record(2, new Handle(1, 4)));
         table.insert(new Record(3, new Handle(1, 4)));
-        assertTrue(table.delete(3));
-        assertFalse(table.delete(70));
+        assertEquals(table.delete(3).getSeminarId(), 3);
+        assertNull(table.delete(70));
         assertNull(table.find(1));
         table.insert(new Record(4, new Handle(1, 4)));
 
-        assertFalse(table.delete(-1));
+        assertNull(table.delete(-1));
         assertNull(table.find(1));
     }
 
@@ -233,20 +233,19 @@ public class MyHashTableTest extends TestCase {
             .getUsedSpaceCount());
     }
 
-
     /**
      * Test the hash table expansion when the load factor is exceeded.
      */
-// @Test
-// public void testExpansion() {
-// for (int i = 0; i < 5; i++) { // Inserting enough items to trigger
-// // expansion
-// Record record = new Record(i, new Handle(17, 16));
-// record.setSeminarId(i);
-// table2.insert(record);
-// }
-// assertTrue("Size should be doubled", table2.getSize() > 8);
-// }
+    @Test
+    public void testExpansion() {
+        for (int i = 0; i < 5; i++) { // Inserting enough items to trigger
+            // expansion
+            Record record = new Record(i, new Handle(17, 16));
+            record.setSeminarId(i);
+            table2.insert(record);
+        }
+        assertTrue("Size should be doubled", table2.getSize() > 8);
+    }
 
 
     /**
@@ -257,7 +256,8 @@ public class MyHashTableTest extends TestCase {
         Record record = new Record(3, new Handle(0, 16));
         record.setSeminarId(2);
         table2.insert(record);
-        assertTrue("Delete should succeed", table2.delete(2));
+        assertEquals("Delete should succeed", table2.delete(2).getSeminarId(),
+            2);
         assertNull("Record should be null after deletion", table2.find(2));
     }
 
@@ -338,8 +338,8 @@ public class MyHashTableTest extends TestCase {
         Handle handle = new Handle(0, 100);
         Record record = new Record(2, handle);
         table3.insert(record);
-        assertTrue("Delete should return true", table3.delete(record
-            .getSeminarId()));
+        assertEquals("Delete should return true", table3.delete(record
+            .getSeminarId()).getSeminarId(), 2);
         assertNull("Record should no longer be found", table3.find(record
             .getSeminarId()));
     }
