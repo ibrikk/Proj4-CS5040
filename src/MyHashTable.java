@@ -106,6 +106,36 @@ public class MyHashTable {
 
     /**
      * @param key
+     *            - calculating the remainder for the first hash
+     * 
+     * @param newSize
+     *            - calculating the remainder for the first hash
+     *            on a given size
+     * 
+     * @return true or false
+     */
+
+    public int hash1(int key, int newSize) {
+        return key % newSize;
+    }
+
+
+    /**
+     * @param key
+     *            - calculating the the double-hashing for he second hash
+     * 
+     * @param newSize
+     *            - calculating the the double-hashing on a given size
+     * 
+     * @return true or false
+     */
+    public int hash2(int key, int newSize) {
+        return (((key / newSize) % (newSize / 2)) * 2) + 1;
+    }
+
+
+    /**
+     * @param key
      *            - Seminar ID
      * @param value
      *            - to be inserted in the other array that indicates
@@ -128,15 +158,13 @@ public class MyHashTable {
         }
         usedSpaceCount++;
         if (usedSpaceCount > (size / 2)) {
-            hashTable = Util.doubleSize(hashTable);
-            size = hashTable.length;
+            doubleSize();
         }
 
         int hash1 = hash1(seminarId);
         int hash2 = hash2(seminarId);
 
-        while (hashTable[hash1] != null
-            && !(hashTable[hash1] instanceof Tombstone)) {
+        while (hashTable[hash1] instanceof Record) {
             hash1 += hash2;
             hash1 %= size;
         }
@@ -144,6 +172,29 @@ public class MyHashTable {
 
         Util.print("Successfully inserted record with ID " + seminarId);
         return true;
+    }
+
+
+    private void doubleSize() {
+        int newSize = hashTable.length * 2;
+        HashableEntry[] newArr = new HashableEntry[newSize];
+        for (int i = 0; i < hashTable.length; i++) {
+            if (hashTable[i] instanceof Record) {
+                int seminarId = hashTable[i].getSeminarId();
+
+                int hash1 = hash1(seminarId, newSize);
+                int hash2 = hash2(seminarId, newSize);
+
+                while (newArr[hash1] instanceof Record) {
+                    hash1 += hash2;
+                    hash1 %= size;
+                }
+                newArr[hash1] = hashTable[i];
+            }
+        }
+        hashTable = newArr;
+        size = newSize;
+        Util.print("Hash table expanded to " + size + " records");
     }
 
 
