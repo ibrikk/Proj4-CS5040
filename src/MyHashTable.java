@@ -176,7 +176,7 @@ public class MyHashTable {
 
 
     private void doubleSize() {
-        int newSize = hashTable.length * 2;
+        int newSize = size * 2;
         HashableEntry[] newArr = new HashableEntry[newSize];
         for (int i = 0; i < hashTable.length; i++) {
             if (hashTable[i] instanceof Record) {
@@ -229,6 +229,7 @@ public class MyHashTable {
         if (hashTable[hash1].getSeminarId() == (Integer)key) {
             Record removed = (Record)hashTable[hash1];
             hashTable[hash1] = tombstone;
+            usedSpaceCount--;
             return removed;
         }
         return null;
