@@ -57,7 +57,6 @@ public class MemManager {
 
     public Handle insert(byte[] space) {
         int requiredPower = calculateMaxPower(space.length);
-        int requiredSize = 1 << requiredPower;
         // Attempt to find or split a block recursively starting from the
         // required power.
         Handle handle = findOrSplit(requiredPower - 1, space.length);
@@ -66,19 +65,16 @@ public class MemManager {
                 space.length);
         }
         else {
-            expandMemoryPool();
-            // After expanding, try to insert again
-            handle = findOrSplit(requiredPower - 1, space.length);
+            while (handle == null) {
+                expandMemoryPool();
+                // After expanding, try to insert again
+                handle = findOrSplit(requiredPower - 1, space.length);
+            }
             Util.print("Memory pool expanded to " + memoryPool.length
                 + " bytes");
-            if (handle == null) {
-                Util.print(
-                    "Failed to allocate memory even after expanding the memory pool.");
-            }
-            else {
-                System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
-                    space.length);
-            }
+
+            System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
+                space.length);
 
         }
         return handle;

@@ -22,6 +22,9 @@ public class Database {
         try {
             byte[] serializedSem = sem.serialize();
             Handle handle = mm.insert(serializedSem);
+            if (handle == null) {
+                return;
+            }
             Record record = new Record(seminarId, handle);
             boolean didInsert = hash.insert(record);
             if (didInsert) {

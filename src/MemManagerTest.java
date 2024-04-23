@@ -145,7 +145,6 @@ public class MemManagerTest extends TestCase {
     public void testMemoryExpansion2() {
         byte[] largeData = new byte[2048]; // Larger than the initial size
         Handle handle = manager.insert(largeData);
-        assertNull("Memory should expand to accommodate large blocks", handle);
         assertTrue("Memory pool should expand", manager
             .getMemoryPoolLength() > 1024);
     }
