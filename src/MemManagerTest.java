@@ -98,6 +98,9 @@ public class MemManagerTest extends TestCase {
     @Test
     public void testInsertAndRemove() {
         byte[] data = new byte[128]; // Smaller than the total size
+        for (int i = 0; i < data.length; i++) {
+            data[i] = 1;
+        }
         Handle handle = manager.insert(data);
         assertNotNull("Handle should not be null after insertion", handle);
 
@@ -116,16 +119,21 @@ public class MemManagerTest extends TestCase {
     @Test
     public void testMergeWithBuddy() {
         byte[] data = new byte[256];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = 1;
+        }
         Handle handle1 = manager.insert(data);
         Handle handle2 = manager.insert(data);
 
         manager.remove(handle1);
+
+        assertEquals("Blocks should merge to form a larger free block", 512,
+            manager.getLargestFreeBlockSize());
+
         manager.remove(handle2); // Should trigger merging
 
-        // Assuming there's a method to get the size of the largest free block
-        int largestFreeBlock = manager.getLargestFreeBlockSize();
-        assertEquals("Blocks should merge to form a larger free block", 512,
-            largestFreeBlock);
+        assertEquals("Blocks should merge to form a larger free block", 1024,
+            manager.getLargestFreeBlockSize());
     }
 
 
@@ -141,31 +149,30 @@ public class MemManagerTest extends TestCase {
             .getMemoryPoolLength() > 1024);
     }
 
-
     /**
      * Test and use empty memory pool
      */
-// @Test
-// public void testUseAndEmptyMemoryPool() {
-// int blockSize = 64;
-// int numBlocks = 1024 / blockSize;
-//
-// // Allocate all memory
-// Handle[] handles = new Handle[numBlocks];
-// for (int i = 0; i < numBlocks; i++) {
-// handles[i] = manager.insert(new byte[blockSize]);
-// assertNotNull("Handle should not be null after insertion",
-// handles[i]);
-// }
-//
-// // Free all memory
-// for (Handle handle : handles) {
-// manager.remove(handle);
-// }
-//
-// // Check if the entire memory is available again
-// assertEquals("All memory should be free after removals", 1024, manager
-// .getLargestFreeBlockSize());
-// }
+    @Test
+    public void testUseAndEmptyMemoryPool() {
+        int blockSize = 64;
+        int numBlocks = 1024 / blockSize;
+
+        // Allocate all memory
+        Handle[] handles = new Handle[numBlocks];
+        for (int i = 0; i < numBlocks; i++) {
+            handles[i] = manager.insert(new byte[blockSize]);
+            assertNotNull("Handle should not be null after insertion",
+                handles[i]);
+        }
+
+        // Free all memory
+        for (Handle handle : handles) {
+            manager.remove(handle);
+        }
+
+        // Check if the entire memory is available again
+        assertEquals("All memory should be free after removals", 1024, manager
+            .getLargestFreeBlockSize());
+    }
 
 }

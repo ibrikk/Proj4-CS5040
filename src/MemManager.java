@@ -41,7 +41,7 @@ public class MemManager {
             return;
         }
         this.memoryPool = new byte[poolSize];
-        this.maxPower = (int)(Math.log(poolSize) / Math.log(2));
+        this.maxPower = calculateMaxPower(poolSize);
         this.freeLists = new LinkedList[maxPower];
         for (int i = 0; i < maxPower; i++) {
             freeLists[i] = new LinkedList();
@@ -155,29 +155,27 @@ public class MemManager {
     }
 
 
-// TODO: Better testing required
     public void remove(Handle theHandle) {
-        int blockPower = (int)(Math.log(theHandle.getLength()) / Math.log(2));
-        int buddySize = (1 << (blockPower + 1));
+        int length = theHandle.getLength();
+        int blockPower = calculateBlockPower(length);
+
+        // Convert blockPower from size to the exponent
+        int power = Integer.numberOfTrailingZeros(blockPower);
+        // Buddy size should be exactly the block size
+        int buddySize = blockPower;
         int buddyStart = theHandle.getStartingPos() ^ buddySize;
 
-        ListNode buddy = findAndRemoveFromList(buddyStart, buddySize,
-            blockPower);
+        ListNode buddy = findAndRemoveFromList(buddyStart, buddySize, power
+            - 1);
         if (buddy != null) {
-            // Buddy found and removed, merge them
             int mergedStart = Math.min(theHandle.getStartingPos(), buddyStart);
             int mergedSize = theHandle.getLength() * 2;
-
-            // Create a new handle for the merged block and attempt further
-            // merging
             Handle mergedHandle = new Handle(mergedStart, mergedSize);
-            remove(mergedHandle); // Recursive call to try further merging
+            remove(mergedHandle);
         }
         else {
-            // No buddy found, add the current block to the free list
             addToFreeList(theHandle.getStartingPos(), theHandle.getLength(),
-                blockPower);
-
+                power - 1);
             clearMemory(theHandle.getStartingPos(), theHandle.getLength());
         }
     }
@@ -206,7 +204,6 @@ public class MemManager {
     }
 
 
-// TODO: Double-check if powerIndex - 1 is good
     private void addToFreeList(int start, int size, int powerIndex) {
         freeLists[powerIndex].add(start, size);
     }
@@ -216,6 +213,24 @@ public class MemManager {
         for (int i = start; i < start + length; i++) {
             memoryPool[i] = 0;
         }
+    }
+
+
+    private int calculateBlockPower(int length) {
+        if (length <= 0) {
+            return 0;
+        }
+        int highestOneBit = Integer.highestOneBit(length);
+        return (highestOneBit == length) ? highestOneBit : highestOneBit << 1;
+    }
+
+
+    public int calculateMaxPower(int size) {
+        int power = 0;
+        while ((1 << power) < size) {
+            power++;
+        }
+        return power; // This returns the index, not the size.
     }
 
 
