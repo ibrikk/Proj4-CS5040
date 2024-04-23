@@ -205,7 +205,26 @@ public class MemManager {
 
 
     private void addToFreeList(int start, int size, int powerIndex) {
-        freeLists[powerIndex].add(start, size);
+        ListNode newNode = new ListNode(start, size);
+        ListNode current = freeLists[powerIndex].getHead();
+        ListNode prev = null;
+
+        // Traverse the list to find the insertion point
+        while (current != null && current.getStart() < start) {
+            prev = current;
+            current = current.getNext();
+        }
+
+        // Insert the new node at the found position
+        newNode.setNext(current);
+        if (prev == null) {
+            // Inserting at the head of the list
+            freeLists[powerIndex].setHead(newNode);
+        }
+        else {
+            // Inserting somewhere after the head
+            prev.setNext(newNode);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 import student.TestCase;
+import java.util.Random;
 
 /**
  * Test the MemManager class
@@ -149,23 +150,39 @@ public class MemManagerTest extends TestCase {
             .getMemoryPoolLength() > 1024);
     }
 
+
     /**
      * Test and use empty memory pool
      */
     @Test
     public void testUseAndEmptyMemoryPool() {
         int blockSize = 64;
+        byte[] data = new byte[blockSize];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = 1; // Initialize all bytes in the block to 1.
+        }
         int numBlocks = 1024 / blockSize;
 
         // Allocate all memory
         Handle[] handles = new Handle[numBlocks];
         for (int i = 0; i < numBlocks; i++) {
-            handles[i] = manager.insert(new byte[blockSize]);
+            handles[i] = manager.insert(data);
             assertNotNull("Handle should not be null after insertion",
                 handles[i]);
         }
 
-        // Free all memory
+        // Randomize the order of handles using a
+        // simple shuffle algorithm
+        Random rand = new Random();
+        for (int i = 0; i < handles.length; i++) {
+            // Generate a random index
+            int randomIndex = rand.nextInt(handles.length);
+            // Swap handles[i] and handles[randomIndex]
+            Handle temp = handles[i];
+            handles[i] = handles[randomIndex];
+            handles[randomIndex] = temp;
+        }
+        // Free all memory in random order
         for (Handle handle : handles) {
             manager.remove(handle);
         }
