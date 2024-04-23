@@ -57,27 +57,48 @@ public class MemManager {
 
     public Handle insert(byte[] space) {
         int requiredPower = calculateMaxPower(space.length);
-        // Attempt to find or split a block recursively starting from the
-        // required power.
-        Handle handle = findOrSplit(requiredPower - 1, space.length);
+        Handle handle = insertRecursive(requiredPower - 1, space);
         if (handle != null) {
             System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
                 space.length);
         }
         else {
-            while (handle == null) {
-                expandMemoryPool();
-                // After expanding, try to insert again
-                handle = findOrSplit(requiredPower - 1, space.length);
-            }
-            Util.print("Memory pool expanded to " + memoryPool.length
-                + " bytes");
-
-            System.arraycopy(space, 0, memoryPool, handle.getStartingPos(),
-                space.length);
-
+            Util.print("Failed to allocate memory after multiple expansions.");
         }
         return handle;
+    }
+
+
+    private Handle insertRecursive(int requiredPowerIndex, byte[] space) {
+        Handle handle = findOrSplit(requiredPowerIndex, space.length);
+        if (handle == null) {
+            // Always attempt to expand if needed
+            expandMemoryPool();
+            // Retry after expanding
+            return insertRecursive(requiredPowerIndex, space);
+        }
+        return handle;
+    }
+
+
+    private void expandMemoryPool() {
+        int oldSize = memoryPool.length;
+        int newSize = oldSize * 2;
+        byte[] newMemoryPool = new byte[newSize];
+        System.arraycopy(memoryPool, 0, newMemoryPool, 0, oldSize);
+        // Replace old memory pool with the new one
+        memoryPool = newMemoryPool;
+
+        // Update maxPower and adjust freeLists for the new size
+        maxPower++;
+        LinkedList[] newFreeLists = new LinkedList[maxPower];
+        System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
+        newFreeLists[maxPower - 1] = new LinkedList();
+        // Add the new large block at the end
+        newFreeLists[maxPower - 2].add(oldSize, oldSize);
+
+        freeLists = newFreeLists;
+        Util.print("Memory pool expanded to " + memoryPool.length + " bytes");
     }
 
 
@@ -117,24 +138,6 @@ public class MemManager {
         // If no suitable block is found after checking all levels up to
         // maxPower, return null
         return null;
-    }
-
-
-    private void expandMemoryPool() {
-        int oldSize = memoryPool.length;
-        int newSize = oldSize * 2;
-        byte[] newMemoryPool = new byte[newSize];
-        System.arraycopy(memoryPool, 0, newMemoryPool, 0, oldSize);
-        memoryPool = newMemoryPool; // Replace old memory pool with the new one
-
-        // Update maxPower and adjust freeLists for the new size
-        maxPower++;
-        LinkedList[] newFreeLists = new LinkedList[maxPower];
-        System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
-        newFreeLists[maxPower - 1] = new LinkedList();
-        newFreeLists[maxPower - 2].add(oldSize, oldSize);
-
-        freeLists = newFreeLists;
     }
 
 
