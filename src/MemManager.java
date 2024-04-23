@@ -187,12 +187,12 @@ public class MemManager {
         int start,
         int size,
         int powerIndex) {
-        ListNode current = freeLists[powerIndex].head;
+        ListNode current = freeLists[powerIndex].getHead();
         ListNode prev = null;
         while (current != null) {
             if (current.getStart() == start && current.getSize() == size) {
                 if (prev == null) {
-                    freeLists[powerIndex].head = current.getNext();
+                    freeLists[powerIndex].setHead(current.getNext());
                 }
                 else {
                     prev.setNext(current.getNext());
@@ -206,6 +206,7 @@ public class MemManager {
     }
 
 
+// TODO: Double-check if powerIndex - 1 is good
     private void addToFreeList(int start, int size, int powerIndex) {
         freeLists[powerIndex].add(start, size);
     }
@@ -221,7 +222,7 @@ public class MemManager {
     public void dump() {
         boolean isFreeListEmpty = true;
         for (int i = 1; i < maxPower; i++) {
-            ListNode current = freeLists[i].head;
+            ListNode current = freeLists[i].getHead();
             if (current != null) {
                 if (isFreeListEmpty) {
                     isFreeListEmpty = false;
@@ -245,7 +246,7 @@ public class MemManager {
     public int getLargestFreeBlockSize() {
         int largestSize = 0;
         for (LinkedList list : freeLists) {
-            ListNode node = list.head;
+            ListNode node = list.getHead();
             while (node != null) {
                 if (node.getSize() > largestSize) {
                     largestSize = node.getSize();

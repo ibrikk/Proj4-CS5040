@@ -141,4 +141,31 @@ public class MemManagerTest extends TestCase {
             .getMemoryPoolLength() > 1024);
     }
 
+
+    /**
+     * Test and use empty memory pool
+     */
+// @Test
+// public void testUseAndEmptyMemoryPool() {
+// int blockSize = 64;
+// int numBlocks = 1024 / blockSize;
+//
+// // Allocate all memory
+// Handle[] handles = new Handle[numBlocks];
+// for (int i = 0; i < numBlocks; i++) {
+// handles[i] = manager.insert(new byte[blockSize]);
+// assertNotNull("Handle should not be null after insertion",
+// handles[i]);
+// }
+//
+// // Free all memory
+// for (Handle handle : handles) {
+// manager.remove(handle);
+// }
+//
+// // Check if the entire memory is available again
+// assertEquals("All memory should be free after removals", 1024, manager
+// .getLargestFreeBlockSize());
+// }
+
 }

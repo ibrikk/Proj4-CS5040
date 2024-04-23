@@ -19,10 +19,10 @@ public class LinkedListTest extends TestCase {
         list.add(0, 100);
         assertFalse("List should not be empty after adding a node", list
             .isEmpty());
-        assertEquals("The start of the first node should be 0", 0, list.head
-            .getStart());
-        assertEquals("The size of the first node should be 100", 100, list.head
-            .getSize());
+        assertEquals("The start of the first node should be 0", 0, list
+            .getHead().getStart());
+        assertEquals("The size of the first node should be 100", 100, list
+            .getHead().getSize());
     }
 
 
@@ -34,8 +34,9 @@ public class LinkedListTest extends TestCase {
         list.add(0, 100);
         list.add(100, 200);
         list.remove(0, 100);
-        assertNotNull("List should still have nodes after removal", list.head);
-        assertEquals("Head should now have start 100", 100, list.head
+        assertNotNull("List should still have nodes after removal", list
+            .getHead());
+        assertEquals("Head should now have start 100", 100, list.getHead()
             .getStart());
     }
 
@@ -47,9 +48,9 @@ public class LinkedListTest extends TestCase {
     public void testRemoveNonExistingNode() {
         list.add(0, 100);
         list.remove(100, 200);
-        assertNotNull("List should not be empty", list.head);
-        assertEquals("Head node start should remain unchanged", 0, list.head
-            .getStart());
+        assertNotNull("List should not be empty", list.getHead());
+        assertEquals("Head node start should remain unchanged", 0, list
+            .getHead().getStart());
     }
 
 
@@ -65,7 +66,7 @@ public class LinkedListTest extends TestCase {
         assertEquals("Found node should have size 100", 100, foundNode
             .getSize());
         assertEquals("After removal, list head should point to the next node",
-            100, list.head.getStart());
+            100, list.getHead().getStart());
     }
 
 

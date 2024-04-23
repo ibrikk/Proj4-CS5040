@@ -1,5 +1,15 @@
 public class LinkedList {
-    ListNode head;
+    private ListNode head;
+
+    public ListNode getHead() {
+        return head;
+    }
+
+
+    public void setHead(ListNode head) {
+        this.head = head;
+    }
+
 
     public void add(int start, int size) {
         ListNode newNode = new ListNode(start, size);

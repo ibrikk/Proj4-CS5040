@@ -38,8 +38,8 @@ public class SemManagerTest extends TestCase {
 
         args[1] = "4";
 
-// args[2] = "P1Sample_inputX.txt";
-        args[2] = "Simple_insert_in.txt";
+//        args[2] = "P1Sample_inputX.txt";
+ args[2] = "Simple_insert_in.txt";
 
         systemOut().clearHistory();
 
@@ -47,8 +47,8 @@ public class SemManagerTest extends TestCase {
 
         String output = systemOut().getHistory();
 
-// String referenceOutput = SemManager.readFile("P1Sample_outputX.txt");
-        String referenceOutput = SemManager.readFile("Simple_insert_out.txt");
+//        String referenceOutput = SemManager.readFile("P1Sample_outputX.txt");
+ String referenceOutput = SemManager.readFile("Simple_insert_out.txt");
 
         assertFuzzyEquals(referenceOutput, output);
 
