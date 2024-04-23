@@ -56,10 +56,7 @@ public class MemManager {
 
 
     public Handle insert(byte[] space) {
-        int requiredPower = 0;
-        while ((1 << requiredPower) < space.length) {
-            requiredPower++;
-        }
+        int requiredPower = calculateMaxPower(space.length);
         int requiredSize = 1 << requiredPower;
         // Attempt to find or split a block recursively starting from the
         // required power.
@@ -128,9 +125,10 @@ public class MemManager {
 
 
     private void expandMemoryPool() {
-        int newSize = memoryPool.length * 2;
+        int oldSize = memoryPool.length;
+        int newSize = oldSize * 2;
         byte[] newMemoryPool = new byte[newSize];
-        System.arraycopy(memoryPool, 0, newMemoryPool, 0, memoryPool.length);
+        System.arraycopy(memoryPool, 0, newMemoryPool, 0, oldSize);
         memoryPool = newMemoryPool; // Replace old memory pool with the new one
 
         // Update maxPower and adjust freeLists for the new size
@@ -138,12 +136,9 @@ public class MemManager {
         LinkedList[] newFreeLists = new LinkedList[maxPower];
         System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
         newFreeLists[maxPower - 1] = new LinkedList();
+        newFreeLists[maxPower - 2].add(oldSize, oldSize);
 
         freeLists = newFreeLists;
-
-        // Add the new additional memory as a free block
-        freeLists[maxPower - 2].add(memoryPool.length / 2, memoryPool.length
-            / 2);
     }
 
 
@@ -157,7 +152,7 @@ public class MemManager {
 
     public void remove(Handle theHandle) {
         int length = theHandle.getLength();
-        int blockPower = calculateBlockPower(length);
+        int blockPower = calculateBlockSize(length);
 
         // Convert blockPower from size to the exponent
         int power = Integer.numberOfTrailingZeros(blockPower);
@@ -235,7 +230,7 @@ public class MemManager {
     }
 
 
-    private int calculateBlockPower(int length) {
+    private int calculateBlockSize(int length) {
         if (length <= 0) {
             return 0;
         }
