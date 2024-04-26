@@ -47,8 +47,11 @@ public class Record implements HashableEntry {
     }
 
 
-    /*
+    /**
      * For testing purposes
+     * 
+     * @param id
+     *            sets the id of seminar
      */
     public void setSeminarId(int id) {
         seminarId = id;

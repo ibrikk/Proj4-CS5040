@@ -214,6 +214,9 @@ public class MemManagerTest extends TestCase {
     }
 
 
+    /**
+     * Test another insert.
+     */
     @Test
     public void testSimpleInsert2() {
         byte[] block = new byte[128];
