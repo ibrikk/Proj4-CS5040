@@ -29,6 +29,12 @@ public class Record implements HashableEntry {
     private Handle handle;
     private int seminarId;
 
+    /**
+     * This is the constructor for the Record class
+     * 
+     * @param seminarId
+     * @param handle
+     */
     public Record(int seminarId, Handle handle) {
         this.seminarId = seminarId;
         this.handle = handle;
