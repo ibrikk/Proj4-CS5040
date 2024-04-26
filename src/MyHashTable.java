@@ -20,7 +20,7 @@
  */
 
 /**
- * This is the Hash table class 
+ * This is the Hash table class
  * 
  * @author {Ibrahim Khalilov ibrahimk}
  * @version 2024-04-20
@@ -135,9 +135,7 @@ public class MyHashTable {
 
 
     /**
-     * @param key
-     *            - Seminar ID
-     * @param value
+     * @param record
      *            - to be inserted in the other array that indicates
      *            startPos of the byte and length
      * @return true if was able to insert.
@@ -260,7 +258,7 @@ public class MyHashTable {
      *            - if both parameters are given then set ShouldPrint can be
      *            set to true
      * 
-     * @return the hash of the key or -1 if the ID was not found
+     * @return the hash of the key or null if the ID was not found
      */
 
     public HashableEntry find(int key, boolean shouldPrint) {

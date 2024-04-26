@@ -7,7 +7,7 @@ import java.io.*;
  * exactly the right length.
  *
  * @author CS3114/CS5040 staff
- * @version
+ * @version 2024-04-20
  */
 
 public class Seminar implements Serializable {

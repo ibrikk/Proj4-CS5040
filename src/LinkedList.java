@@ -65,7 +65,8 @@ public class LinkedList {
      *            the size of the node to remove
      */
     public void remove(int start, int size) {
-        ListNode current = head, prev = null;
+        ListNode current = head;
+        ListNode prev = null;
         while (current != null && !(current.getStart() == start && current
             .getSize() == size)) {
             prev = current;
@@ -130,6 +131,13 @@ public class LinkedList {
  * block,
  * including its start position, size, and a reference to the next node in the
  * list.
+ */
+
+/**
+ * This is the ListNode class for the linked list
+ * 
+ * @author {Ibrahim Khalilov ibrahimk}
+ * @version 2024-04-25
  */
 class ListNode {
     private int start;

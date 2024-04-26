@@ -52,7 +52,8 @@ public class MyHashTableTest extends TestCase {
         }
         catch (Exception e) {
             fail(
-                "Expected an IllegalArgumentException, but another exception was thrown");
+                "Expected an IllegalArgumentException, "
+                + "but another exception was thrown");
         }
     }
 
