@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
  * This is the Handle class the MemoryManager returns
  * 
  * @author {Ibrahim Khalilov ibrahimk}
- * @version 2023-09-04
+ * @version 2024-04-20
  */
 
 public class SemManager {

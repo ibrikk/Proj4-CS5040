@@ -20,10 +20,10 @@
  */
 
 /**
- * This is the Handle class the MemoryManager returns
+ * This is the Hash table class 
  * 
  * @author {Ibrahim Khalilov ibrahimk}
- * @version 2023-09-04
+ * @version 2024-04-20
  */
 public class MyHashTable {
 
@@ -175,6 +175,9 @@ public class MyHashTable {
     }
 
 
+    /**
+     * Doubles the size of the hash table and rehashes all the existing records.
+     */
     private void doubleSize() {
         int newSize = size * 2;
         HashableEntry[] newArr = new HashableEntry[newSize];

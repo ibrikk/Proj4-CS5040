@@ -7,7 +7,7 @@ import java.util.Random;
  * Test the MemManager class
  *
  * @author Ibrahim Khalilov - ibrahimk
- * @version 2023-09-06
+ * @version 2024-04-20
  */
 
 public class MemManagerTest extends TestCase {
@@ -15,7 +15,9 @@ public class MemManagerTest extends TestCase {
     private MemManager manager;
 
     /**
-     * Before annotation runs before each test
+     * Sets up the environment before each test, initializing a MemManager with
+     * a specific
+     * memory pool size.
      */
     @Before
     public void setUp() {
@@ -24,7 +26,9 @@ public class MemManagerTest extends TestCase {
 
 
     /**
-     * Test that a simple insertion is handled correctly.
+     * Tests simple insertion into the memory manager to ensure a block can be
+     * allocated
+     * without the need for splitting.
      */
     @Test
     public void testSimpleInsert() {
@@ -189,6 +193,113 @@ public class MemManagerTest extends TestCase {
         // Check if the entire memory is available again
         assertEquals("All memory should be free after removals", 1024, manager
             .getLargestFreeBlockSize());
+    }
+
+
+    /**
+     * Test that uses all of the memory pool then empties it.
+     */
+    @Test
+    public void testMemManagerFullEmpty() {
+        byte[] data = new byte[1024];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = 1;
+        }
+        Handle h = manager.insert(data);
+        assertEquals(manager.getLargestFreeBlockSize(), 0);
+        assertEquals(manager.getMemoryPoolLength(), 1024);
+
+        manager.remove(h);
+        assertEquals(manager.getLargestFreeBlockSize(), 1024);
+    }
+
+
+    @Test
+    public void testSimpleInsert2() {
+        byte[] block = new byte[128];
+        Handle handle = manager.insert(block);
+        assertNotNull(handle);
+        assertEquals(128, handle.getLength());
+    }
+
+
+    /**
+     * Tests the behavior of the memory manager when a block needs to be split
+     * to fit a
+     * smaller request after a larger block has been previously inserted.
+     */
+    @Test
+    public void testSplittingBehavior() {
+        byte[] block = new byte[512];
+        manager.insert(block); // This should fit directly
+        byte[] smallerBlock = new byte[256];
+        manager.insert(smallerBlock); // This will require splitting the
+                                      // remaining 512 block
+        Handle handle = manager.insert(smallerBlock);
+        assertNotNull(handle);
+        assertEquals(256, handle.getLength());
+    }
+
+
+    /**
+     * Tests non-sequential insertion to ensure the memory manager correctly
+     * handles
+     * allocations of various sizes in an unpredictable order.
+     */
+    @Test
+    public void testNonSequentialInsertion() {
+        manager.insert(new byte[256]);
+        manager.insert(new byte[512]);
+        Handle handleSmall = manager.insert(new byte[64]);
+        Handle handleLarge = manager.insert(new byte[128]);
+
+        assertNotNull(handleSmall);
+        assertNotNull(handleLarge);
+        assertFalse(handleSmall.getStartingPos() == handleLarge
+            .getStartingPos());
+    }
+
+
+    /**
+     * Tests the memory manager's ability to handle filling the memory to
+     * capacity and
+     * then correctly expanding the memory pool when needed.
+     */
+    @Test
+    public void testFullCapacityAndExpansion() {
+        // Completely fill the memory
+        for (int i = 0; i < 8; i++) {
+            manager.insert(new byte[128]);
+        }
+        // Force an expansion
+        Handle expansionHandle = manager.insert(new byte[128]);
+        assertNotNull(expansionHandle);
+        assertTrue(manager.getMemoryPoolLength() > 1024);
+    }
+
+
+    /**
+     * Tests randomized insertion and deletion to simulate a complex real-world
+     * scenario
+     * and ensure that the memory manager can handle dynamic changes in memory
+     * usage.
+     */
+    @Test
+    public void testRandomizedInsertionAndDeletion() {
+        Handle[] handles = new Handle[10];
+        for (int i = 0; i < handles.length; i++) {
+            handles[i] = manager.insert(new byte[(int)(Math.random() * 100)
+                + 50]);
+        }
+
+        for (int i = 0; i < handles.length; i++) {
+            if (Math.random() > 0.5) {
+                manager.remove(handles[i]);
+            }
+        }
+
+        int largestFreeBlock = manager.getLargestFreeBlockSize();
+        assertTrue(largestFreeBlock >= 50);
     }
 
 }

@@ -2,10 +2,10 @@ import student.TestCase;
 import org.junit.Test;
 
 /**
- * Test the CommandProcessor class
+ * Test the Util class
  *
  * @author Ibrahim Khalilov - ibrahimk
- * @version 2023-09-06
+ * @version 2024-04-20
  */
 
 public class UtilTest extends TestCase {

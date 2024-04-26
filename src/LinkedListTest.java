@@ -2,9 +2,26 @@ import org.junit.Before;
 import org.junit.Test;
 import student.TestCase;
 
+/**
+ * Test class for the LinkedList class.
+ * Contains test cases to verify the functionality of the LinkedList and its
+ * methods.
+ */
+
+/**
+ * This class tests the linked list
+ * 
+ * @author {Ibrahim Khalilov ibrahimk}
+ * @version 2024-04-25
+ */
 public class LinkedListTest extends TestCase {
+
     private LinkedList list;
 
+    /**
+     * Set up method called before each test case.
+     * Initializes a new instance of the LinkedList.
+     */
     @Before
     public void setUp() {
         list = new LinkedList();

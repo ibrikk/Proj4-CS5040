@@ -1,4 +1,13 @@
+/**
+ * Database class for operations
+ */
 
+/**
+ * This is the HashableEntry class for the hash table
+ * 
+ * @author {Ibrahim Khalilov ibrahimk}
+ * @version 2024-04-25
+ */
 public class Database {
     private static MemManager mm;
     private static MyHashTable hash;
@@ -17,6 +26,12 @@ public class Database {
     }
 
 
+    /**
+     * This method will serialize the seminar and insert
+     * 
+     * @param sem
+     *            seminar that was early created
+     */
     public void insert(Seminar sem) {
         int seminarId = sem.getId();
         try {
@@ -38,6 +53,12 @@ public class Database {
     }
 
 
+    /**
+     * This method will delete the seminar based on key
+     * 
+     * @param deleteKey
+     *            key to delete
+     */
     public void delete(int deleteKey) {
         Record deletedRecord = hash.delete(deleteKey);
         if (deletedRecord == null) {
@@ -49,6 +70,12 @@ public class Database {
     }
 
 
+    /**
+     * This method will find the seminar based on key
+     * 
+     * @param searchKey
+     *            key to delete
+     */
     public void find(int searchKey) throws Exception {
         HashableEntry foundEntry = hash.find(searchKey, true);
         if (foundEntry instanceof Record) {
@@ -59,8 +86,12 @@ public class Database {
     }
 
 
-    /** Custom Printing method */
-
+    /**
+     * @param location
+     *            print based on a location
+     * 
+     *            Custom Printing method
+     */
     public void print(String location) throws NoSuchFieldException {
         switch (location) {
             case "hashtable":

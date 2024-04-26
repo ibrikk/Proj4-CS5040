@@ -23,7 +23,7 @@
  * This is the Handle class the MemoryManager returns
  * 
  * @author {Ibrahim Khalilov ibrahimk}
- * @version 2023-09-04
+ * @version 2024-04-20
  */
 
 public class Util {
@@ -123,6 +123,14 @@ public class Util {
     }
 
 
+    /**
+     * Checks if the given memory block is cleared (i.e., all bytes are set to
+     * zero).
+     *
+     * @param memory
+     *            the byte array representing the memory block to be checked
+     * @return true if all bytes in the memory block are zero, false otherwise
+     */
     public static boolean isMemoryCleared(byte[] memory) {
         for (byte b : memory) {
             if (b != 0) {
@@ -130,14 +138,5 @@ public class Util {
             }
         }
         return true;
-    }
-
-
-    /**
-     * Prints ====== for better visualization
-     */
-
-    public static void printDiv() {
-        System.out.println("============");
     }
 }

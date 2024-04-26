@@ -1,4 +1,9 @@
-
+/**
+ * This is the Tombstone class for the hash table
+ * 
+ * @author {Ibrahim Khalilov ibrahimk}
+ * @version 2024-04-25
+ */
 public class Tombstone implements HashableEntry {
 
     private static final Tombstone INSTANCE = new Tombstone();

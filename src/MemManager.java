@@ -23,7 +23,7 @@
  * This is the Handle class the MemoryManager returns
  * 
  * @author {Ibrahim Khalilov ibrahimk}
- * @version 2023-09-04
+ * @version 2024-04-25
  */
 public class MemManager {
     private byte[] memoryPool;
@@ -50,11 +50,25 @@ public class MemManager {
     }
 
 
+    /**
+     * Retrieves the length of the memory pool.
+     *
+     * @return the length of the memory pool
+     */
     public int getMemoryPoolLength() {
         return memoryPool.length;
     }
 
 
+    /**
+     * Inserts a byte array into the memory pool and returns a handle to the
+     * allocated memory.
+     *
+     * @param space
+     *            the byte array to be inserted
+     * @return a handle to the allocated memory, or null if allocation fails
+     *         after multiple expansions
+     */
     public Handle insert(byte[] space) {
         int requiredPower = calculateMaxPower(space.length);
         Handle handle = insertRecursive(requiredPower - 1, space);
@@ -69,6 +83,15 @@ public class MemManager {
     }
 
 
+    /**
+     * Recursively attempts to insert a byte array into the memory pool.
+     *
+     * @param requiredPowerIndex
+     *            the index of the required power for the allocation
+     * @param space
+     *            the byte array to be inserted
+     * @return a handle to the allocated memory, or null if allocation fails
+     */
     private Handle insertRecursive(int requiredPowerIndex, byte[] space) {
         Handle handle = findOrSplit(requiredPowerIndex, space.length);
         if (handle == null) {
@@ -81,6 +104,10 @@ public class MemManager {
     }
 
 
+    /**
+     * Expands the memory pool by doubling its size and adjusting the free lists
+     * accordingly.
+     */
     private void expandMemoryPool() {
         int oldSize = memoryPool.length;
         int newSize = oldSize * 2;
@@ -102,6 +129,16 @@ public class MemManager {
     }
 
 
+    /**
+     * Finds or splits a block of the required size from the free lists.
+     *
+     * @param requiredPowerIndex
+     *            the index of the required power for the allocation
+     * @param spaceLength
+     *            the length of the space to be allocated
+     * @return a handle to the allocated memory, or null if no suitable block is
+     *         found
+     */
     private Handle findOrSplit(int requiredPowerIndex, int spaceLength) {
         // Attempt to find a suitable block from the smallest necessary size
         // upwards
@@ -141,6 +178,13 @@ public class MemManager {
     }
 
 
+    /**
+     * Reads the bytes from the memory pool based on the provided handle.
+     *
+     * @param handle
+     *            the handle to the allocated memory
+     * @return the byte array containing the data from the memory pool
+     */
     public byte[] readBytes(Handle handle) {
         byte[] data = new byte[handle.getLength()];
         System.arraycopy(memoryPool, handle.getStartingPos(), data, 0, handle
@@ -149,6 +193,13 @@ public class MemManager {
     }
 
 
+    /**
+     * Removes (deallocates) the memory block associated with the provided
+     * handle.
+     *
+     * @param theHandle
+     *            the handle to the memory block to be removed
+     */
     public void remove(Handle theHandle) {
         int length = theHandle.getLength();
         int blockPower = calculateBlockSize(length);
@@ -175,6 +226,18 @@ public class MemManager {
     }
 
 
+    /**
+     * Finds and removes a specific block from the free list at the given power
+     * index.
+     *
+     * @param start
+     *            the starting position of the block
+     * @param size
+     *            the size of the block
+     * @param powerIndex
+     *            the index of the power for the free list
+     * @return the removed list node, or null if the block is not found
+     */
     private ListNode findAndRemoveFromList(
         int start,
         int size,
@@ -198,6 +261,16 @@ public class MemManager {
     }
 
 
+    /**
+     * Adds a block to the free list at the given power index.
+     *
+     * @param start
+     *            the starting position of the block
+     * @param size
+     *            the size of the block
+     * @param powerIndex
+     *            the index of the power for the free list
+     */
     private void addToFreeList(int start, int size, int powerIndex) {
         ListNode newNode = new ListNode(start, size);
         ListNode current = freeLists[powerIndex].getHead();
@@ -222,6 +295,14 @@ public class MemManager {
     }
 
 
+    /**
+     * Clears the memory block by setting all its bytes to zero.
+     *
+     * @param start
+     *            the starting position of the block
+     * @param length
+     *            the length of the block
+     */
     private void clearMemory(int start, int length) {
         for (int i = start; i < start + length; i++) {
             memoryPool[i] = 0;
@@ -229,6 +310,13 @@ public class MemManager {
     }
 
 
+    /**
+     * Calculates the block size based on the given length.
+     *
+     * @param length
+     *            the length of the block
+     * @return the calculated block size
+     */
     private int calculateBlockSize(int length) {
         if (length <= 0) {
             return 0;
@@ -238,6 +326,13 @@ public class MemManager {
     }
 
 
+    /**
+     * Calculates the maximum power (index) for the given size.
+     *
+     * @param size
+     *            the size for which to calculate the maximum power
+     * @return the maximum power (index)
+     */
     public int calculateMaxPower(int size) {
         int power = 0;
         while ((1 << power) < size) {
@@ -247,6 +342,10 @@ public class MemManager {
     }
 
 
+    /**
+     * Dumps the free lists, displaying the sizes and starting positions of the
+     * free blocks.
+     */
     public void dump() {
         boolean isFreeListEmpty = true;
         for (int i = 1; i < maxPower; i++) {
@@ -271,6 +370,11 @@ public class MemManager {
     }
 
 
+    /**
+     * Retrieves the size of the largest free block in the memory pool.
+     *
+     * @return the size of the largest free block
+     */
     public int getLargestFreeBlockSize() {
         int largestSize = 0;
         for (LinkedList list : freeLists) {
