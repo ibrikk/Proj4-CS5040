@@ -13,7 +13,7 @@ public class CommandProcessorTest extends TestCase {
      */
 
     private CommandProcessor cp = new CommandProcessor(16, 16);
-    private Database db = new Database(1024, 16);
+    private Database db = new Database(128, 16);
 
     /**
      * Sets up the tests that follow. In general, used for initialization
@@ -62,68 +62,66 @@ public class CommandProcessorTest extends TestCase {
 
     }
 
-
-    public void testCreateSeminar2() throws NoSuchFieldException {
-        String[][] arrayOfLinesArray = {
-            /** Line 1 */
-            { "insert", "1" }, {
-                /** Line 2 */
-                "VT" },
-            /** Line 3 */
-            { "0610051600", "90", "10", "10", "45" },
-            /** Line 4 */
-            { "HCI" },
-            /** Line 5 */
-            { "VT" } };
-
-        String[] keywords = { "HCI" };
-
-        Seminar actual = cp.getCreateSeminar(arrayOfLinesArray);
-
-        String[][] arrayOfLinesArray2 = {
-            /** Line 1 */
-            { "insert", "2" }, {
-                /** Line 2 */
-                "Test title" },
-            /** Line 3 */
-            { "0610051600", "90", "10", "10", "45" },
-            /** Line 4 */
-            { "HCI" },
-            /** Line 5 */
-            { "VT" } };
-
-        String[] keywords2 = { "HCI", "Computer_Science", "VT",
-            "Virginia_Tech" };
-
-        Seminar actual2 = cp.getCreateSeminar(arrayOfLinesArray2);
-
-        String[][] arrayOfLinesArray3 = {
-            /** Line 1 */
-            { "insert", "3" }, {
-                /** Line 2 */
-                "Test 3" },
-            /** Line 3 */
-            { "0610051600", "90", "10", "10", "45" },
-            /** Line 4 */
-            { "HCI" },
-            /** Line 5 */
-            { "VT" } };
-
-        Seminar actual3 = cp.getCreateSeminar(arrayOfLinesArray3);
-
-        db.insert(actual);
-        db.print("blocks");
+// /**
+// * Check the createSeminar method
+// */
+//
+// public void testCreateSeminar2() throws NoSuchFieldException {
+// String[][] arrayOfLinesArray = {
+// /** Line 1 */
+// { "insert", "1" }, {
+// /** Line 2 */
+// "T1" },
+// /** Line 3 */
+// { "0610051600", "90", "10", "10", "45" },
+// /** Line 4 */
+// { "HCI" },
+// /** Line 5 */
+// { "VT" } };
+//
+// Seminar actual = cp.getCreateSeminar(arrayOfLinesArray);
+//
+// String[][] arrayOfLinesArray2 = {
+// /** Line 1 */
+// { "insert", "2" }, {
+// /** Line 2 */
+// "T1" },
+// /** Line 3 */
+// { "0610051600", "90", "10", "10", "45" },
+// /** Line 4 */
+// { "HCI" },
+// /** Line 5 */
+// { "VT" } };
+//
+// Seminar actual2 = cp.getCreateSeminar(arrayOfLinesArray2);
+//
+// String[][] arrayOfLinesArray3 = {
+// /** Line 1 */
+// { "insert", "3" }, {
+// /** Line 2 */
+// "T1" },
+// /** Line 3 */
+// { "0610051600", "90", "10", "10", "45" },
+// /** Line 4 */
+// { "HCI" },
+// /** Line 5 */
+// { "VT" } };
+//
+// Seminar actual3 = cp.getCreateSeminar(arrayOfLinesArray3);
+//
+// db.insert(actual);
+// db.print("blocks");
 // db.insert(actual2);
 // db.print("blocks");
 // db.insert(actual3);
 // db.print("blocks");
-
-// db.delete(1);
-// db.delete(2);
+//
 // db.delete(3);
+// db.delete(2);
+// db.delete(1);
 // db.print("blocks");
-
-    }
+//
+// }
 }
 
 // -----TEST 7.2 -- memManagerMerge -----

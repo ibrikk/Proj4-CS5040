@@ -215,12 +215,12 @@ public class MemManager {
             - 1);
         if (buddy != null) {
             int mergedStart = Math.min(theHandle.getStartingPos(), buddyStart);
-            int mergedSize = theHandle.getLength() * 2;
+            int mergedSize = buddySize * 2;
             Handle mergedHandle = new Handle(mergedStart, mergedSize);
             remove(mergedHandle);
         }
         else {
-            addToFreeList(theHandle.getStartingPos(), theHandle.getLength(),
+            addToFreeList(theHandle.getStartingPos(), buddySize,
                 power - 1);
             clearMemory(theHandle.getStartingPos(), theHandle.getLength());
         }
