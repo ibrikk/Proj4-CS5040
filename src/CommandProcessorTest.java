@@ -13,7 +13,6 @@ public class CommandProcessorTest extends TestCase {
      */
 
     private CommandProcessor cp = new CommandProcessor(16, 16);
-    private Database db = new Database(128, 16);
 
     /**
      * Sets up the tests that follow. In general, used for initialization
