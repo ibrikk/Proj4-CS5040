@@ -33,14 +33,11 @@ public class SemManagerTest extends TestCase {
 
         String[] args = new String[3];
 
-// args[0] = "1024";
-// Should not be expanding the second time
         args[0] = "512";
 
         args[1] = "4";
 
         args[2] = "P1Sample_inputX.txt";
-// args[2] = "Simple_insert_in.txt";
 
         systemOut().clearHistory();
 
@@ -49,17 +46,9 @@ public class SemManagerTest extends TestCase {
         String output = systemOut().getHistory();
 
         String referenceOutput = SemManager.readFile("P1Sample_outputX.txt");
-// String referenceOutput = SemManager.readFile("Simple_insert_out.txt");
 
         assertFuzzyEquals(referenceOutput, output);
 
     }
-
-// pool 32
-// table 4
-// expansion-decreases the memory pool
-
-    // expanded earlier than supposed to
-// 128 -> 512 -> 256
 
 }
