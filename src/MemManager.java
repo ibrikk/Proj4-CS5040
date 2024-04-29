@@ -124,7 +124,7 @@ public class MemManager {
         // Add the new large block at the end
         int p = 1 << (maxPower - 1);
 
-        if (spaceLength > p) {
+        if (spaceLength > p && maxPower > 1) {
             ListNode removedNode = newFreeLists[maxPower - 2].findAndRemove(
                 oldSize);
             newFreeLists[maxPower - 1].add(removedNode.getStart(), newSize);
