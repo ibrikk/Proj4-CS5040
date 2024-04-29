@@ -96,7 +96,7 @@ public class MemManager {
         Handle handle = findOrSplit(requiredPowerIndex, space.length);
         if (handle == null) {
             // Always attempt to expand if needed
-            expandMemoryPool();
+            expandMemoryPool(space.length);
             // Retry after expanding
             return insertRecursive(requiredPowerIndex, space);
         }
@@ -108,7 +108,7 @@ public class MemManager {
      * Expands the memory pool by doubling its size and adjusting the free lists
      * accordingly.
      */
-    private void expandMemoryPool() {
+    private void expandMemoryPool(int spaceLength) {
         int oldSize = memoryPool.length;
         int newSize = oldSize * 2;
         byte[] newMemoryPool = new byte[newSize];
@@ -122,9 +122,16 @@ public class MemManager {
         System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
         newFreeLists[maxPower - 1] = new LinkedList();
         // Add the new large block at the end
+        int p = 1 << (maxPower - 1);
 
-// newFreeLists[maxPower - 1].add(oldSize, oldSize);
-        newFreeLists[maxPower - 2].add(oldSize, oldSize);
+        if (spaceLength > p) {
+            ListNode removedNode = newFreeLists[maxPower - 2].findAndRemove(
+                oldSize);
+            newFreeLists[maxPower - 1].add(removedNode.getStart(), newSize);
+        }
+        else {
+            newFreeLists[maxPower - 2].add(oldSize, oldSize);
+        }
 
         freeLists = newFreeLists;
         Util.print("Memory pool expanded to " + memoryPool.length + " bytes");
