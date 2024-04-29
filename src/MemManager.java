@@ -152,7 +152,8 @@ public class MemManager {
         // Attempt to find a suitable block from the smallest necessary size
         // upwards
         for (int currentPowerIndex =
-            requiredPowerIndex; currentPowerIndex < maxPower; currentPowerIndex++) {
+            requiredPowerIndex; currentPowerIndex < maxPower;
+            currentPowerIndex++) {
             if (!freeLists[currentPowerIndex].isEmpty()) {
                 ListNode block = freeLists[currentPowerIndex].findAndRemove(
                     1 << (currentPowerIndex + 1));
