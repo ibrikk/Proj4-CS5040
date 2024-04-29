@@ -35,6 +35,13 @@ public class Database {
     public void insert(Seminar sem) {
         int seminarId = sem.getId();
         try {
+            HashableEntry foundDuplicate = hash.find(seminarId);
+            if (foundDuplicate instanceof Record) {
+                Util.print("Insert FAILED - There is already a record with ID "
+                    + seminarId);
+
+                return;
+            }
             byte[] serializedSem = sem.serialize();
             Handle handle = mm.insert(serializedSem);
             if (handle == null) {
