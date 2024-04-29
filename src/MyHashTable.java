@@ -147,13 +147,6 @@ public class MyHashTable {
             Util.print(seminarId + " key cannot be a negative value");
             return false;
         }
-//        HashableEntry foundDuplicate = find(seminarId);
-//        if (foundDuplicate instanceof Record) {
-//            Util.print("Insert FAILED - There is already a record with ID "
-//                + seminarId);
-//
-//            return false;
-//        }
         usedSpaceCount++;
         if (usedSpaceCount > (size / 2)) {
             doubleSize();

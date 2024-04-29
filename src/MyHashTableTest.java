@@ -51,8 +51,7 @@ public class MyHashTableTest extends TestCase {
             // Test passes if this block is reached
         }
         catch (Exception e) {
-            fail(
-                "Expected an IllegalArgumentException, "
+            fail("Expected an IllegalArgumentException, "
                 + "but another exception was thrown");
         }
     }
@@ -100,20 +99,6 @@ public class MyHashTableTest extends TestCase {
         assertTrue(table.getHashTable()[3].getSeminarId() == 2);
         assertTrue(table.getHashTable()[4].getSeminarId() == 3);
     }
-
-
-    /** Testing insertion with duplicates */
-
-// @Test
-// public void testInsertDuplicate() {
-// Handle value = new Handle(0, 3);
-// Record val = new Record(6, value);
-// table.insert(val);
-// systemOut().clearHistory();
-// table.insert(val);
-// assertEquals(systemOut().getHistory(),
-// "Insert FAILED - There is already a record with ID 6\n");
-// }
 
 
     /** Testing multiple insertions */
@@ -233,6 +218,7 @@ public class MyHashTableTest extends TestCase {
         assertEquals("Used space count should be 1 after insert", 1, table2
             .getUsedSpaceCount());
     }
+
 
     /**
      * Test the hash table expansion when the load factor is exceeded.
