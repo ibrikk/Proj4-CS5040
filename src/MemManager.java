@@ -122,6 +122,8 @@ public class MemManager {
         System.arraycopy(freeLists, 0, newFreeLists, 0, freeLists.length);
         newFreeLists[maxPower - 1] = new LinkedList();
         // Add the new large block at the end
+
+// newFreeLists[maxPower - 1].add(oldSize, oldSize);
         newFreeLists[maxPower - 2].add(oldSize, oldSize);
 
         freeLists = newFreeLists;
@@ -143,8 +145,7 @@ public class MemManager {
         // Attempt to find a suitable block from the smallest necessary size
         // upwards
         for (int currentPowerIndex =
-            requiredPowerIndex; currentPowerIndex < maxPower; 
-            currentPowerIndex++) {
+            requiredPowerIndex; currentPowerIndex < maxPower; currentPowerIndex++) {
             if (!freeLists[currentPowerIndex].isEmpty()) {
                 ListNode block = freeLists[currentPowerIndex].findAndRemove(
                     1 << (currentPowerIndex + 1));
@@ -220,8 +221,7 @@ public class MemManager {
             remove(mergedHandle);
         }
         else {
-            addToFreeList(theHandle.getStartingPos(), buddySize,
-                power - 1);
+            addToFreeList(theHandle.getStartingPos(), buddySize, power - 1);
             clearMemory(theHandle.getStartingPos(), theHandle.getLength());
         }
     }

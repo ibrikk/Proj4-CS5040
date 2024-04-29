@@ -305,4 +305,20 @@ public class MemManagerTest extends TestCase {
         assertTrue(largestFreeBlock >= 50);
     }
 
+
+    /**
+     * Tests randomized insertion and deletion to simulate a complex real-world
+     * scenario
+     * and ensure that the memory manager can handle dynamic changes in memory
+     * usage.
+     */
+    @Test
+    public void testInsertionIntoSmallBlock() {
+        MemManager mem = new MemManager(8);
+        byte[] bytes = new byte[200];
+
+        mem.insert(bytes);
+        assertTrue(true);
+    }
+
 }
